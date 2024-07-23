@@ -1,0 +1,2 @@
+package br.senai.lab365.LABMedical.services;public class PacienteService {
+}
