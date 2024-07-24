@@ -42,7 +42,7 @@ public class PacienteController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public PacienteResponse atualiza(
             @PathVariable Long id,
-            @RequestBody PacienteRequest request) {
+            @Valid @RequestBody PacienteRequest request) {
         return service.atualiza(id, request);
     }
 
