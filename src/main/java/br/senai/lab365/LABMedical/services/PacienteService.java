@@ -1,17 +1,23 @@
 package br.senai.lab365.LABMedical.services;
 
-import br.senai.lab365.LABMedical.dtos.EnderecoRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.*;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class PacienteService {
@@ -43,5 +49,66 @@ public class PacienteService {
                 paciente.orElseThrow(
                         ()-> new EntityNotFoundException("Paciente não encontrado com o id: " + id)));
 
+    }
+
+    public PacienteResponse atualiza(Long id, PacienteRequest request) {
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Paciente não encontrado com o id: " + id)
+                );
+
+        mapper.atualizaPacienteDesdeRequest(paciente, request);
+
+        paciente = pacienteRepository.save(paciente);
+        return mapper.toResponse(paciente);
+    }
+
+    public void remove(Long id) {
+        if (!pacienteRepository.existsById(id)) {
+            throw new EntityNotFoundException("Paciente não encontrado com o id: " + id);
+        }
+
+        pacienteRepository.deleteById(id);
+    }
+
+
+    public PacienteResponsePagination lista(String nome, String telefone, String email, int numeroPagina, int tamanhoPagina) {
+        Pageable paginacao = PageRequest.of(numeroPagina, tamanhoPagina);
+        Page<Paciente> paginaPacientes;
+
+        if (nome != null && telefone != null && email != null) {
+            paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContainingAndTelefoneContainingAndEmailContaining(nome, telefone, email, paginacao);
+        } else if (nome != null) {
+            paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContaining(nome, paginacao);
+        } else if (telefone != null) {
+            paginaPacientes = pacienteRepository.findByTelefoneContaining(telefone, paginacao);
+        } else if (email != null) {
+            paginaPacientes = pacienteRepository.findByEmailContaining(email, paginacao);
+        } else {
+            paginaPacientes = pacienteRepository.findAll(paginacao);
+        }
+
+        List<PacienteGetRequest> conteudo = paginaPacientes.getContent().stream()
+                .map(mapper::getRequestToResponse)
+                .collect(Collectors.toList());
+
+        PacienteResponsePagination response = new PacienteResponsePagination();
+        response.setConteudo(conteudo);
+        response.setTotalPaginas(paginaPacientes.getTotalPages());
+        response.setTamanhoPagina(tamanhoPagina);
+        response.setPaginaAtual(numeroPagina);
+        response.setTotalElementos((int) paginaPacientes.getTotalElements());
+        response.setUltima(paginaPacientes.isLast());
+
+        return response;
+    }
+
+
+    private int calcularIdade(LocalDate dataNascimento) {
+        if (dataNascimento == null) {
+            return 0;
+        }
+        LocalDate hoje = LocalDate.now();
+        return Period.between(dataNascimento, hoje).getYears();
     }
 }

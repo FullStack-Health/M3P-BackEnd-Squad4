@@ -81,4 +81,6 @@ public class PacienteRequest {
     @Valid
     private EnderecoRequest endereco;
 
+    private String id_usuario;
+
 }
