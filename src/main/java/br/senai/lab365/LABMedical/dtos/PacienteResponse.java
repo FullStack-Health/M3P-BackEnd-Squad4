@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class PacienteResponse {
+
+    private Long id;
     private String nome;
     private String genero;
     private LocalDate dataNascimento;
@@ -27,5 +29,6 @@ public class PacienteResponse {
     private String numeroConvenio;
     private LocalDate validadeConvenio;
     private EnderecoResponse endereco;
+    private String id_usuario;
 
 }
