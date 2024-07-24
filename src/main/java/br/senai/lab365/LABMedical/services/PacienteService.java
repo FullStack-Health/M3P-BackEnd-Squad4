@@ -6,9 +6,12 @@ import br.senai.lab365.LABMedical.dtos.PacienteResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PacienteService {
@@ -32,5 +35,13 @@ public class PacienteService {
         Paciente pacienteSalvo = pacienteRepository.save(paciente);
         // Converter a entidade Paciente salva para o DTO PacienteResponse
         return mapper.toResponse(pacienteSalvo);
+    }
+
+    public PacienteResponse busca(Long id) {
+        Optional<Paciente> paciente = pacienteRepository.findById(id);
+        return mapper.toResponse(
+                paciente.orElseThrow(
+                        ()-> new EntityNotFoundException("Paciente não encontrado com o id: " + id)));
+
     }
 }

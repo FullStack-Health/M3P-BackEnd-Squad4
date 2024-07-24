@@ -24,4 +24,12 @@ public class PacienteController {
     public PacienteResponse cadastra(@Valid @RequestBody PacienteRequest request) {
         return service.cadastra(request);
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PacienteResponse busca(
+            @PathVariable Long id,
+            @RequestBody PacienteRequest request) {
+        return service.busca(id);
+    }
 }
