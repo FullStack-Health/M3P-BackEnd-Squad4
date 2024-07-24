@@ -6,6 +6,8 @@ import br.senai.lab365.LABMedical.dtos.PacienteResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
+import jakarta.validation.Valid;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +21,11 @@ public class PacienteService {
         this.mapper = mapper;
     }
 
-    public PacienteResponse cadastra(PacienteRequest pacienteRequest) {
+    public PacienteResponse cadastra(@Valid PacienteRequest pacienteRequest) {
+        // Verificar se o CPF já existe
+        if (pacienteRepository.existsByCpf(pacienteRequest.getCpf())) {
+            throw new DuplicateKeyException("CPF já cadastrado com este número: " + pacienteRequest.getCpf());
+        }
         // Converter o DTO PacienteRequest para a entidade Paciente
         Paciente paciente = mapper.toEntity(pacienteRequest);
         // Salvar a entidade Paciente
