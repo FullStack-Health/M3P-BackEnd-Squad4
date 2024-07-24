@@ -8,6 +8,9 @@ import br.senai.lab365.LABMedical.entities.Paciente;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 @Component
 public class PacienteMapper {
 
@@ -102,13 +105,21 @@ public class PacienteMapper {
         }
     }
 
-
-
     public PacienteGetRequest getRequestToResponse(Paciente paciente) {
         PacienteGetRequest response = new PacienteGetRequest();
         response.setNome(paciente.getNome());
         response.setTelefone(paciente.getTelefone());
         response.setEmail(paciente.getEmail());
+        response.setIdade(calcularIdade(paciente.getDataNascimento()));
+        response.setConvenio(paciente.getConvenio());
         return response;
+    }
+
+    private int calcularIdade(LocalDate dataNascimento) {
+        if (dataNascimento == null) {
+            return 0;
+        }
+        LocalDate hoje = LocalDate.now();
+        return Period.between(dataNascimento, hoje).getYears();
     }
 }

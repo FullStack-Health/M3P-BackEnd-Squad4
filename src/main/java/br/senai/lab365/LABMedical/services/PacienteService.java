@@ -104,11 +104,4 @@ public class PacienteService {
     }
 
 
-    private int calcularIdade(LocalDate dataNascimento) {
-        if (dataNascimento == null) {
-            return 0;
-        }
-        LocalDate hoje = LocalDate.now();
-        return Period.between(dataNascimento, hoje).getYears();
-    }
 }

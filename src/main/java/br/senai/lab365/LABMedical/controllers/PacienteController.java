@@ -59,7 +59,7 @@ public class PacienteController {
             @RequestParam(required = false) String telefone,
             @RequestParam(required = false) String email,
             @RequestParam(value = "numeroPagina", defaultValue = "0", required = false) int numeroPagina,
-            @RequestParam(value = "tamanhoPagina", defaultValue = "3", required = false) int tamanhoPagina
+            @RequestParam(value = "tamanhoPagina", defaultValue = "10", required = false) int tamanhoPagina
     ) {
         return service.lista(nome, telefone, email, numeroPagina, tamanhoPagina);
     }
