@@ -35,7 +35,7 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public PacienteResponse atualiza(
             @PathVariable Long id,
             @Valid @RequestBody PacienteRequest request) {

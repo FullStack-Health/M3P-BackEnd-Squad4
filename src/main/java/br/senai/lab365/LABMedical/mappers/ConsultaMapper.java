@@ -2,6 +2,7 @@ package br.senai.lab365.LABMedical.mappers;
 
 import br.senai.lab365.LABMedical.dtos.consulta.ConsultaRequest;
 import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.entities.Consulta;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import org.springframework.stereotype.Component;
@@ -40,5 +41,14 @@ public class ConsultaMapper {
                 consulta.getDosagemPrecaucoes(),
                 consulta.getPaciente().getId()
         );
+    }
+
+    public void atualizaConsultaDesdeRequest(Consulta consulta, ConsultaRequest request) {
+        if (request.getMotivo() != null) consulta.setMotivo(request.getMotivo());
+        if (request.getDataConsulta() != null) consulta.setDataConsulta(request.getDataConsulta());
+        if (request.getHorarioConsulta() != null) consulta.setHorarioConsulta(request.getHorarioConsulta());
+        if (request.getDescricaoProblema() != null) consulta.setDescricaoProblema(request.getDescricaoProblema());
+        if (request.getMedicacaoReceitada() != null) consulta.setMedicacaoReceitada(request.getMedicacaoReceitada());
+        if (request.getDosagemPrecaucoes() != null) consulta.setDosagemPrecaucoes(request.getDosagemPrecaucoes());
     }
 }

@@ -19,9 +19,22 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<ConsultaResponse> criarConsulta(@Valid @RequestBody ConsultaRequest consultaRequest) {
-        ConsultaResponse response = service.cadastra(consultaRequest);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ConsultaResponse cadastra(@Valid @RequestBody ConsultaRequest consultaRequest) {
+        return service.cadastra(consultaRequest);
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ConsultaResponse busca(@PathVariable Long id) {
+        return service.busca(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ConsultaResponse atualiza(@PathVariable Long id, @Valid @RequestBody ConsultaRequest consultaRequest) {
+        return service.atualiza(id, consultaRequest);
+    }
+
 
 }
