@@ -52,4 +52,11 @@ public class ConsultaService {
         consulta = consultaRepository.save(consulta);
         return mapper.toResponse(consulta);
     }
+
+    public void remove(Long id) {
+        if(!consultaRepository.existsById(id)) {
+            throw new EntityNotFoundException("Consulta não encontrada com o id: " + id);
+        }
+        consultaRepository.deleteById(id);
+    }
 }

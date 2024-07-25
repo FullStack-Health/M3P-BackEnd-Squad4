@@ -36,5 +36,10 @@ public class ConsultaController {
         return service.atualiza(id, consultaRequest);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remove(@PathVariable Long id) {
+        service.remove(id);
+    }
 
 }
