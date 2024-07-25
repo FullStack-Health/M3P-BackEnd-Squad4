@@ -49,4 +49,24 @@ public class ExameService {
     }
 
 
+    public ExameResponse atualiza(Long id, ExameRequest request) {
+        if (request.getIdPaciente() == null) {
+            throw new IllegalArgumentException("O id do paciente não pode ser nulo.");
+        }
+
+        Paciente paciente = pacienteRepository.findById(request.getIdPaciente())
+                .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado como o id: " + request.getIdPaciente()));
+
+        Exame exame = exameRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Exame não encontrada com o id: " + id)
+                );
+
+        mapper.atualizaExameDesdeRequest(exame, request);
+
+        exame = exameRepository.save(exame);
+        return mapper.toResponse(exame);
+
+
+    }
 }

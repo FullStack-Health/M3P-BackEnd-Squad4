@@ -1,7 +1,9 @@
 package br.senai.lab365.LABMedical.mappers;
 
+import br.senai.lab365.LABMedical.dtos.consulta.ConsultaRequest;
 import br.senai.lab365.LABMedical.dtos.exame.ExameRequest;
 import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
+import br.senai.lab365.LABMedical.entities.Consulta;
 import br.senai.lab365.LABMedical.entities.Exame;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import jakarta.persistence.Column;
@@ -47,4 +49,16 @@ public class ExameMapper {
                 exame.getPaciente().getId()
         );
     }
+
+    public void atualizaExameDesdeRequest(Exame exame, ExameRequest request) {
+        if (request.getNomeExame() != null) exame.setNomeExame(request.getNomeExame());
+        if (request.getDataExame() != null) exame.setDataExame(request.getDataExame());
+        if (request.getHorarioExame() != null) exame.setHorarioExame(request.getHorarioExame());
+        if (request.getTipoExame() != null) exame.setTipoExame(request.getTipoExame());
+        if (request.getLaboratorio() != null) exame.setLaboratorio(request.getLaboratorio());
+        if (request.getUrlDocumento() != null) exame.setUrlDocumento(request.getUrlDocumento());
+        if (request.getResultados() != null) exame.setResultados(request.getResultados());
+        if (request.getIdPaciente() != null) exame.getPaciente().setId(request.getIdPaciente());
+    }
+
 }

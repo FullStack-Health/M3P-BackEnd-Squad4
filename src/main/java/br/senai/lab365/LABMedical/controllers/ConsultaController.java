@@ -32,7 +32,8 @@ public class ConsultaController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ConsultaResponse atualiza(@PathVariable Long id, @Valid @RequestBody ConsultaRequest consultaRequest) {
+    public ConsultaResponse atualiza(@PathVariable Long id,
+                                     @Valid @RequestBody ConsultaRequest consultaRequest) {
         return service.atualiza(id, consultaRequest);
     }
 

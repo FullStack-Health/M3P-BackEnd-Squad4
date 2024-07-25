@@ -42,6 +42,13 @@ public class ConsultaService {
     }
 
     public ConsultaResponse atualiza(Long id, ConsultaRequest request) {
+        if (request.getIdPaciente() == null) {
+            throw new IllegalArgumentException("O id do paciente não pode ser nulo.");
+        }
+
+        Paciente paciente = pacienteRepository.findById(request.getIdPaciente())
+                .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado como o id: " + request.getIdPaciente()));
+
         Consulta consulta = consultaRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Consulta não encontrada com o id: " + id)

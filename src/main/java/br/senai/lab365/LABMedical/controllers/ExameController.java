@@ -29,5 +29,11 @@ public class ExameController {
         return service.busca(id);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ExameResponse atualiza(@PathVariable Long id,
+                                  @Valid @RequestBody ExameRequest request) {
+        return service.atualiza(id, request);
+    }
 
 }
