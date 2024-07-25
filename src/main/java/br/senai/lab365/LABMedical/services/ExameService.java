@@ -69,4 +69,12 @@ public class ExameService {
 
 
     }
+
+    public void remove(Long id) {
+        if (!exameRepository.existsById(id)) {
+            throw new EntityNotFoundException("Exame não encontrado com o id: " + id);
+        }
+
+        exameRepository.deleteById(id);
+    }
 }

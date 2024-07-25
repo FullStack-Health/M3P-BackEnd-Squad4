@@ -36,4 +36,10 @@ public class ExameController {
         return service.atualiza(id, request);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remove(@PathVariable Long id) {
+        service.remove(id);
+    }
+
 }
