@@ -1,7 +1,7 @@
 package br.senai.lab365.LABMedical.mappers;
 
-import br.senai.lab365.LABMedical.dtos.EnderecoRequest;
-import br.senai.lab365.LABMedical.dtos.EnderecoResponse;
+import br.senai.lab365.LABMedical.dtos.paciente.EnderecoRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.EnderecoResponse;
 import br.senai.lab365.LABMedical.entities.Endereco;
 import org.springframework.stereotype.Component;
 

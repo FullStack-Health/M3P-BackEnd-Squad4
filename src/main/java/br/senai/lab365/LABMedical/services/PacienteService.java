@@ -1,6 +1,9 @@
 package br.senai.lab365.LABMedical.services;
 
-import br.senai.lab365.LABMedical.dtos.*;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
@@ -12,8 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

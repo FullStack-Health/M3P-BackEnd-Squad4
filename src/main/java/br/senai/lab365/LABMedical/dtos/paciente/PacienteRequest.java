@@ -1,7 +1,6 @@
-package br.senai.lab365.LABMedical.dtos;
+package br.senai.lab365.LABMedical.dtos.paciente;
 
 
-import br.senai.lab365.LABMedical.entities.Endereco;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 

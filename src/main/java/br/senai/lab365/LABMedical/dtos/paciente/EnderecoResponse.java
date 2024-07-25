@@ -1,7 +1,5 @@
-package br.senai.lab365.LABMedical.dtos;
+package br.senai.lab365.LABMedical.dtos.paciente;
 
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +9,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EnderecoRequest {
+public class EnderecoResponse {
 
-    @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP inválido. Enviar no formato 00000-000")
+    private Long id;
     private String cep;
     private String cidade;
     private String estado;
@@ -21,7 +19,6 @@ public class EnderecoRequest {
     private String numero;
     private String complemento;
     private String bairro;
-    @Column(name = "ponto_referencia")
     private String ptoReferencia;
 
 }
