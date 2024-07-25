@@ -12,6 +12,8 @@ import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ExameService {
 
@@ -38,4 +40,13 @@ public class ExameService {
         Exame exameSalvo = exameRepository.save(exame);
         return mapper.toResponse(exameSalvo);
     }
+
+    public ExameResponse busca(Long id) {
+        Optional<Exame> exame = exameRepository.findById(id);
+        return mapper.toResponse(
+                exame.orElseThrow(
+                        ()-> new EntityNotFoundException("Exame não encontrado com o id: " + id)));
+    }
+
+
 }
