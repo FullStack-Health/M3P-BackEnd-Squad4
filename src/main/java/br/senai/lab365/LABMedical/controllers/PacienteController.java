@@ -1,17 +1,13 @@
 package br.senai.lab365.LABMedical.controllers;
 
-import br.senai.lab365.LABMedical.dtos.PacienteGetRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteResponse;
-import br.senai.lab365.LABMedical.dtos.PacienteResponsePagination;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
 import br.senai.lab365.LABMedical.services.PacienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/pacientes")

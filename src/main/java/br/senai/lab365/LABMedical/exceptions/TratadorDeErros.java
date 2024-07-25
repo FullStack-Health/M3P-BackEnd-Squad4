@@ -1,6 +1,6 @@
-package br.senai.lab365.LABMedical.exceptions.paciente;
+package br.senai.lab365.LABMedical.exceptions;
 
-import br.senai.lab365.LABMedical.exceptions.paciente.dtos.ErroResponse;
+import br.senai.lab365.LABMedical.exceptions.dtos.ErroResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.DataFormatException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
@@ -40,4 +41,13 @@ public class TratadorDeErros {
     public ResponseEntity<String> trataEntidadeNaoEncontrada(EntityNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+//    @ExceptionHandler(DataFormatException.class)
+//    public ResponseEntity<ErroResponse> trataErroDeFormatoDeData(DataFormatException exception) {
+//        ErroResponse response = new ErroResponse();
+//        response.setCampo("dataConsulta");
+//        response.setMensagem(exception.getMessage());
+//
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
 }

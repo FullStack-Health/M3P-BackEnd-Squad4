@@ -1,4 +1,4 @@
-package br.senai.lab365.LABMedical.exceptions.paciente.dtos;
+package br.senai.lab365.LABMedical.exceptions.dtos;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

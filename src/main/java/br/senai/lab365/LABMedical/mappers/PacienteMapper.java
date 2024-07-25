@@ -1,9 +1,9 @@
 package br.senai.lab365.LABMedical.mappers;
 
-import br.senai.lab365.LABMedical.dtos.EnderecoRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteGetRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteRequest;
-import br.senai.lab365.LABMedical.dtos.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.paciente.EnderecoRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;

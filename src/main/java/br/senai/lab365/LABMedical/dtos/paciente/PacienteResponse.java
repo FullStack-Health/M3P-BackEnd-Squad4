@@ -1,6 +1,5 @@
-package br.senai.lab365.LABMedical.dtos;
+package br.senai.lab365.LABMedical.dtos.paciente;
 
-import br.senai.lab365.LABMedical.entities.Endereco;
 import lombok.*;
 
 import java.time.LocalDate;
