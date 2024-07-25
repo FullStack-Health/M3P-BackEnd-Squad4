@@ -50,5 +50,6 @@ public class ConsultaMapper {
         if (request.getDescricaoProblema() != null) consulta.setDescricaoProblema(request.getDescricaoProblema());
         if (request.getMedicacaoReceitada() != null) consulta.setMedicacaoReceitada(request.getMedicacaoReceitada());
         if (request.getDosagemPrecaucoes() != null) consulta.setDosagemPrecaucoes(request.getDosagemPrecaucoes());
+        if (request.getIdPaciente() != null) consulta.getPaciente().setId(request.getIdPaciente());
     }
 }
