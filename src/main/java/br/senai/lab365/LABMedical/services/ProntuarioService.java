@@ -1,11 +1,16 @@
 package br.senai.lab365.LABMedical.services;
 
-import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
-import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
-import br.senai.lab365.LABMedical.dtos.paciente.PacienteSummaryRequest;
-import br.senai.lab365.LABMedical.dtos.paciente.SummaryResponsePagination;
+import br.senai.lab365.LABMedical.dtos.prontuario.PacienteSummaryRequest;
+import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
+import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
+import br.senai.lab365.LABMedical.entities.Consulta;
+import br.senai.lab365.LABMedical.entities.Exame;
 import br.senai.lab365.LABMedical.entities.Paciente;
+import br.senai.lab365.LABMedical.entities.Prontuario;
 import br.senai.lab365.LABMedical.mappers.ProntuarioMapper;
+import br.senai.lab365.LABMedical.repositories.ConsultaRepository;
+import br.senai.lab365.LABMedical.repositories.ExameRepository;
+import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import br.senai.lab365.LABMedical.repositories.ProntuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -14,17 +19,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProntuarioService {
 
-    private final ProntuarioRepository repository;
+    private final PacienteRepository pacienteRepository;
     private final ProntuarioMapper mapper;
+    private final ExameRepository exameRepository;
+    private final ConsultaRepository consultaRepository;
 
-    public ProntuarioService(ProntuarioRepository repository, ProntuarioMapper mapper) {
-        this.repository = repository;
+    public ProntuarioService(PacienteRepository pacienteRepository, ExameRepository exameRepository, ConsultaRepository consultaRepository, ProntuarioMapper mapper) {
+        this.pacienteRepository = pacienteRepository;
+        this.exameRepository = exameRepository;
+        this.consultaRepository = consultaRepository;
         this.mapper = mapper;
     }
 
@@ -34,15 +42,15 @@ public class ProntuarioService {
         Page<Paciente> paginaPacientes;
 
         if (nome != null && idPaciente != null) {
-            paginaPacientes = repository.findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, paginacao);
+            paginaPacientes = pacienteRepository.findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, paginacao);
         } else if (nome != null) {
-            paginaPacientes = repository.findByNomeIgnoreCaseContaining(nome, paginacao);
+            paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContaining(nome, paginacao);
         } else {
-            paginaPacientes = repository.findAll(paginacao);
+            paginaPacientes = pacienteRepository.findAll(paginacao);
         }
 
         if (idPaciente != null) {
-            Paciente paciente = repository.findById(idPaciente).orElseThrow(
+            Paciente paciente = pacienteRepository.findById(idPaciente).orElseThrow(
                     () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
             );
         }
@@ -65,4 +73,17 @@ public class ProntuarioService {
 
         return response;
     }
+
+    public ProntuarioResponse busca(Long idPaciente) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElseThrow(
+                () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
+        );
+
+        List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
+        List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
+
+           return mapper.getPacienteToProntuario(paciente, exames, consultas);
+    }
+
+
 }

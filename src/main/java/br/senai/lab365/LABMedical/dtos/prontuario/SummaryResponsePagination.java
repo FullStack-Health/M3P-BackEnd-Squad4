@@ -1,4 +1,4 @@
-package br.senai.lab365.LABMedical.dtos.paciente;
+package br.senai.lab365.LABMedical.dtos.prontuario;
 
 import lombok.Getter;
 import lombok.Setter;
