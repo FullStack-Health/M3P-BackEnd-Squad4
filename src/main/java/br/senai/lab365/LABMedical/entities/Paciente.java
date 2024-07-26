@@ -33,6 +33,7 @@ public class Paciente {
     private String convenio;
     private String numeroConvenio;
     private LocalDate validadeConvenio;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;

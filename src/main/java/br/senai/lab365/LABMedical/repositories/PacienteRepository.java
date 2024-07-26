@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
@@ -21,4 +22,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     Page<Paciente> findByNomeIgnoreCaseContainingAndTelefoneContainingAndEmailContaining(
             String nome, String telefone, String email, Pageable paginacao);
 
+    Page<Paciente> findByIdAndNomeIgnoreCaseContaining(Long id, String nome, Pageable paginacao);
+
+    Optional<Paciente> findById(Long id);
 }

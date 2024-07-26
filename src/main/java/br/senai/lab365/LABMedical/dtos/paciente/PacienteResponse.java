@@ -1,8 +1,11 @@
 package br.senai.lab365.LABMedical.dtos.paciente;
 
+import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
+import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,5 +32,6 @@ public class PacienteResponse {
     private LocalDate validadeConvenio;
     private EnderecoResponse endereco;
     private String id_usuario;
+
 
 }
