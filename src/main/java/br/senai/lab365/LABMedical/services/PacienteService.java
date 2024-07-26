@@ -93,7 +93,7 @@ public class PacienteService {
                 .map(mapper::getRequestToResponse)
                 .collect(Collectors.toList());
 
-        if(conteudo.size() == 0){
+        if(conteudo.isEmpty()){
             throw new EntityNotFoundException("Nenhum paciente encontrado");
         }
 
