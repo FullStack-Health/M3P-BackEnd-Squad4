@@ -1,9 +1,6 @@
 package br.senai.lab365.LABMedical.dtos.exame;
 
-import br.senai.lab365.LABMedical.entities.Paciente;
 import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

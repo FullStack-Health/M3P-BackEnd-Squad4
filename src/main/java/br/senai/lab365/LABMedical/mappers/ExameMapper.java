@@ -1,16 +1,10 @@
 package br.senai.lab365.LABMedical.mappers;
 
-import br.senai.lab365.LABMedical.dtos.consulta.ConsultaRequest;
 import br.senai.lab365.LABMedical.dtos.exame.ExameRequest;
 import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
-import br.senai.lab365.LABMedical.entities.Consulta;
 import br.senai.lab365.LABMedical.entities.Exame;
 import br.senai.lab365.LABMedical.entities.Paciente;
-import jakarta.persistence.Column;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Component
 public class ExameMapper {
