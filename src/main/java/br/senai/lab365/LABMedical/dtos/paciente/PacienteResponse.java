@@ -1,11 +1,11 @@
 package br.senai.lab365.LABMedical.dtos.paciente;
 
-import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
-import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor

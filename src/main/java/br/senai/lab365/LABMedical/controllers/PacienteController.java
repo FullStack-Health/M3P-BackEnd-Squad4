@@ -5,7 +5,6 @@ import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
 import br.senai.lab365.LABMedical.services.PacienteService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

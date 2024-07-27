@@ -2,10 +2,8 @@ package br.senai.lab365.LABMedical.services;
 
 import br.senai.lab365.LABMedical.dtos.exame.ExameRequest;
 import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
-import br.senai.lab365.LABMedical.entities.Consulta;
 import br.senai.lab365.LABMedical.entities.Exame;
 import br.senai.lab365.LABMedical.entities.Paciente;
-import br.senai.lab365.LABMedical.mappers.ConsultaMapper;
 import br.senai.lab365.LABMedical.mappers.ExameMapper;
 import br.senai.lab365.LABMedical.repositories.ExameRepository;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;

@@ -20,7 +20,7 @@ import java.time.LocalTime;
 public class ConsultaRequest {
 
     @NotBlank(message = "O motivo da consulta é obrigatório")
-    @Size(min = 8, max = 64, message = "O motivo da consulta deve ter no mínimo 8 e no máximo 64 caracteres")
+    @Size(min = 3, max = 64, message = "O motivo da consulta deve ter no mínimo 8 e no máximo 64 caracteres")
     private String motivo;
 
     @NotNull(message = "A data da consulta é obrigatória. Enviar a data no formato yyyy-MM-dd")

@@ -1,7 +1,5 @@
 package br.senai.lab365.LABMedical.entities;
 
-import br.senai.lab365.LABMedical.dtos.consulta.ConsultaRequest;
-import br.senai.lab365.LABMedical.dtos.exame.ExameRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
