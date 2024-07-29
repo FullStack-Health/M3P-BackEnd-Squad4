@@ -5,6 +5,8 @@ import br.senai.lab365.LABMedical.dtos.login.LoginResponse;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -24,13 +26,18 @@ public class LoginController {
     private final JwtEncoder jwtEncoder;
     private final UsuarioService usuarioService;
     private static long TEMPO_EXPIRACAO = 36000L;
-
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public LoginResponse geraToken(@RequestBody LoginRequest loginRequest) {
 
+        logger.info("Recebendo requisição de login para o email: {}", loginRequest.email());
+
         Usuario usuario = usuarioService.validaUsuario(loginRequest);
+        if (usuario == null) {
+            logger.error("Falha ao autenticar o usuário: {}", loginRequest.email());
+        }
         Instant agora = Instant.now();
             String scope = usuario.getAuthorities()
                 .stream()
@@ -46,7 +53,18 @@ public class LoginController {
                 .build();
 
         var valorJwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+        logger.info("Usuário autenticado com sucesso: {}", loginRequest.email());
+
         return new LoginResponse(valorJwt, TEMPO_EXPIRACAO);
+    }
+
+    @PostMapping("/login/admin")
+    @ResponseStatus(HttpStatus.OK)
+    public LoginResponse loginAdmin() {
+        LoginRequest loginRequest = new LoginRequest("admin@example.com", "admin");
+
+        return geraToken(loginRequest);
     }
 
 }

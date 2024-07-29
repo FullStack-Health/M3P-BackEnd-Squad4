@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PerfilRepository extends JpaRepository<Perfil, Long> {
-    Optional<Perfil> findByNomePerfil(String nomePerfil);
+//    Optional<Perfil> findByNomePerfil(String nomePerfil);
+    Perfil findByNomePerfil(String nomePerfil);
 }

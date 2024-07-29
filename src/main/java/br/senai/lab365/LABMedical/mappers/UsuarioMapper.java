@@ -5,6 +5,7 @@ import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.repositories.PerfilRepository;
 import br.senai.lab365.LABMedical.services.PerfilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,15 +21,19 @@ public class UsuarioMapper {
     @Autowired
     private PerfilService perfilService;
 
+    @Autowired
+    private PerfilRepository perfilRepository;
+
     public Usuario toEntity(UsuarioRequest request) {
         if (request == null) {
             return null;
         }
 
-        Perfil perfil = perfilService.validaPerfil(request.getNomePerfil());
+        Perfil perfil = perfilRepository.findByNomePerfil(request.getNomePerfil());
         Set<Perfil> perfis = new HashSet<>();
-        perfis.add(perfil);
-
+        if (perfil != null) {
+            perfis.add(perfil);
+        }
         return new Usuario(
                 null,
                 request.getNome(),
