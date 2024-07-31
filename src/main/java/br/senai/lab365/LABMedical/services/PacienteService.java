@@ -4,6 +4,7 @@ import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;

@@ -1,5 +1,6 @@
 package br.senai.lab365.LABMedical.dtos.paciente;
 
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class PacienteResponse {
     private String numeroConvenio;
     private LocalDate validadeConvenio;
     private EnderecoResponse endereco;
-    private String id_usuario;
+    private UsuarioResponse usuario;
 
 
 }

@@ -44,7 +44,7 @@ public class ExameMapper {
         );
     }
 
-    public void atualizaExameDesdeRequest(Exame exame, ExameRequest request) {
+    public void atualizaExameDesdeRequest(Exame exame, ExameRequest request, Paciente paciente) {
         if (request.getNomeExame() != null) exame.setNomeExame(request.getNomeExame());
         if (request.getDataExame() != null) exame.setDataExame(request.getDataExame());
         if (request.getHorarioExame() != null) exame.setHorarioExame(request.getHorarioExame());
@@ -52,7 +52,7 @@ public class ExameMapper {
         if (request.getLaboratorio() != null) exame.setLaboratorio(request.getLaboratorio());
         if (request.getUrlDocumento() != null) exame.setUrlDocumento(request.getUrlDocumento());
         if (request.getResultados() != null) exame.setResultados(request.getResultados());
-        if (request.getIdPaciente() != null) exame.getPaciente().setId(request.getIdPaciente());
+        if (request.getIdPaciente() != null) paciente.getId();
     }
 
 }

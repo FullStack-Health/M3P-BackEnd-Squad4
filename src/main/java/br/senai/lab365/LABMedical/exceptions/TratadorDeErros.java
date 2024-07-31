@@ -20,7 +20,13 @@ public class TratadorDeErros {
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<ErroResponse> trataChaveDuplicada(DuplicateKeyException exception) {
         ErroResponse response = new ErroResponse();
-        response.setCampo("cpf");
+
+        if (exception.getMostSpecificCause().getMessage().contains("CPF")) {
+            response.setCampo("CPF");
+        } else if (exception.getMostSpecificCause().getMessage().contains("email")) {
+            response.setCampo("email");
+        }
+
         response.setMensagem(exception.getLocalizedMessage());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);

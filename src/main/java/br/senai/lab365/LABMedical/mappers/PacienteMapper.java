@@ -4,26 +4,41 @@ import br.senai.lab365.LABMedical.dtos.paciente.EnderecoRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
+import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 
 @Component
 public class PacienteMapper {
 
     private final EnderecoMapper enderecoMapper;
+    private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
 
-    public PacienteMapper(EnderecoMapper enderecoMapper) {
+    public PacienteMapper(EnderecoMapper enderecoMapper, UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
         this.enderecoMapper = enderecoMapper;
+        this.usuarioRepository = usuarioRepository;
+        this.usuarioMapper = usuarioMapper;
     }
 
     public Paciente toEntity(PacienteRequest pacienteRequest) {
         if (pacienteRequest == null) {
             return null;
         }
+
+        UsuarioRequest usuarioRequest = Optional.ofNullable(pacienteRequest.getUsuario())
+                .orElseThrow(() -> new IllegalArgumentException("UsuarioRequest não pode ser null"));
+
+        Long usuarioId = usuarioRequest.getId();
+
         return new Paciente(
                 null,
                 pacienteRequest.getNome(),
@@ -43,7 +58,7 @@ public class PacienteMapper {
                 pacienteRequest.getNumeroConvenio(),
                 pacienteRequest.getValidadeConvenio(),
                 enderecoMapper.toEntity(pacienteRequest.getEndereco()),
-                pacienteRequest.getId_usuario()
+                usuarioRepository.getReferenceById(usuarioId)
         );
     }
 
@@ -51,6 +66,9 @@ public class PacienteMapper {
         if (paciente == null) {
             return null;
         }
+
+        Long usuarioId = paciente.getUsuario() != null ? paciente.getUsuario().getId(): null;
+
         return new PacienteResponse(
                 paciente.getId(),
                 paciente.getNome(),
@@ -70,7 +88,7 @@ public class PacienteMapper {
                 paciente.getNumeroConvenio(),
                 paciente.getValidadeConvenio(),
                 enderecoMapper.toResponse(paciente.getEndereco()),
-                paciente.getId_usuario()
+                usuarioMapper.toResponse(usuarioRepository.getReferenceById(usuarioId))
                 );
     }
 
@@ -91,7 +109,6 @@ public class PacienteMapper {
         if (request.getConvenio() != null) paciente.setConvenio(request.getConvenio());
         if (request.getNumeroConvenio() != null) paciente.setNumeroConvenio(request.getNumeroConvenio());
         if (request.getValidadeConvenio() != null) paciente.setValidadeConvenio(request.getValidadeConvenio());
-        if (request.getId_usuario() != null) paciente.setId_usuario(request.getId_usuario());
         if (request.getEndereco() != null) {
             @Valid EnderecoRequest enderecoRequest = request.getEndereco();
             if (enderecoRequest.getCep() != null) paciente.getEndereco().setCep(enderecoRequest.getCep());
