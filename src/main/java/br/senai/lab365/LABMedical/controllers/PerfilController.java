@@ -1,9 +1,8 @@
 package br.senai.lab365.LABMedical.controllers;
 
-import br.senai.lab365.LABMedical.dtos.PerfilRequest;
 import br.senai.lab365.LABMedical.services.PerfilService;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/perfis")

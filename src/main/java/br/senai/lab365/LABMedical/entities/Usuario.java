@@ -23,7 +23,7 @@ public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usuario_id")
+    @Column(name = "id_usuario")
     private Long id;
 
     @Column(nullable = false)
@@ -44,8 +44,8 @@ public class Usuario implements UserDetails {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_perfis",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "perfil_id")
+            joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_perfil")
     )
     private Set<Perfil> perfilList;
 

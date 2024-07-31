@@ -1,7 +1,9 @@
 package br.senai.lab365.LABMedical.dtos.paciente;
 
 
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -79,6 +81,8 @@ public class PacienteRequest {
     @Valid
     private EnderecoRequest endereco;
 
-    private String id_usuario;
+
+    @JsonProperty("id_usuario")
+    private UsuarioRequest usuario;
 
 }

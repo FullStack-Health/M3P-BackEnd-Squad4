@@ -20,8 +20,8 @@ public class PerfilService {
     @PostConstruct
     public void criaPerfil() {
         criaPerfilSeNãoExiste("ADMIN");
-        criaPerfilSeNãoExiste("PACIENTE");
         criaPerfilSeNãoExiste("MÉDICO");
+        criaPerfilSeNãoExiste("PACIENTE");
     }
 
     public void criaPerfilSeNãoExiste(String nomePerfil) {

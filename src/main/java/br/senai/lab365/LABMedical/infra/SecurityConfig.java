@@ -16,14 +16,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -38,11 +36,63 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(
-                        auth -> auth
-                                .requestMatchers(HttpMethod.POST,"/login","/usuarios", "/pacientes", "consultas", "/exames", "/perfis")
-                                    .permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/login")
+                        .permitAll() // Acesso irrestrito
+
+                        .requestMatchers(HttpMethod.POST, "/usuarios", "/login/admin")
+                        .hasAuthority("SCOPE_ADMIN") // Criar usuários
+
+                        .requestMatchers(HttpMethod.POST, "/pacientes")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar paciente
+
+                        .requestMatchers(HttpMethod.GET, "/pacientes/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE") // Obter paciente por ID (SCOPE_PACIENTE deve verificar apenas seu próprio ID)
+
+                        .requestMatchers(HttpMethod.PUT, "/pacientes/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Atualizar paciente por ID
+
+                        .requestMatchers(HttpMethod.DELETE, "/pacientes/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Excluir paciente por ID
+
+                        .requestMatchers(HttpMethod.GET, "/pacientes")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar pacientes
+
+                        .requestMatchers(HttpMethod.POST, "/consultas")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar consulta
+
+                        .requestMatchers(HttpMethod.GET, "/consultas/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE") // Obter consulta por ID (SCOPE_PACIENTE deve verificar apenas suas próprias consultas)
+
+                        .requestMatchers(HttpMethod.PUT, "/consultas/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Atualizar consulta por ID
+
+                        .requestMatchers(HttpMethod.DELETE, "/consultas/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Excluir consulta por ID
+
+                        .requestMatchers(HttpMethod.POST, "/exames")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar exame
+
+                        .requestMatchers(HttpMethod.GET, "/exames/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE") // Obter exame por ID (SCOPE_PACIENTE deve verificar apenas seus próprios exames)
+
+                        .requestMatchers(HttpMethod.PUT, "/exames/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Atualizar exame por ID
+
+                        .requestMatchers(HttpMethod.DELETE, "/exames/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Excluir exame por ID
+
+                        .requestMatchers(HttpMethod.GET, "/pacientes/prontuarios")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar pacientes para prontuário
+
+                        .requestMatchers(HttpMethod.GET, "/pacientes/{id}/prontuarios")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar prontuários do paciente
+
+                        .requestMatchers(HttpMethod.GET, "/dashboard")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar dados do dashboard
+
+                        .anyRequest()
+                        .authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
@@ -52,6 +102,15 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
+//    @Bean
+//    public JwtDecoder jwtDecoder() {
+//        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(this.pub).build();
+//        jwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer("http://auth-server"));
+//        jwtDecoder.setClaimSetConverter(new CustomClaimTypeConverter());
+//        return jwtDecoder;
+//    }
 
     @Bean
     public JwtDecoder jwtDecoder() {

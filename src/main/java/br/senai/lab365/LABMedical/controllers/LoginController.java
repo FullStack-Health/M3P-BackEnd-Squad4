@@ -49,7 +49,7 @@ public class LoginController {
                 .issuedAt(agora)
                 .expiresAt(agora.plusSeconds(TEMPO_EXPIRACAO))
                 .subject(usuario.getEmail())
-                .claim("perfil", scope)
+                .claim("scope", scope)
                 .build();
 
         var valorJwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

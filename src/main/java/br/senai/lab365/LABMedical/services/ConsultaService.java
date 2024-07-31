@@ -54,7 +54,7 @@ public class ConsultaService {
                         () -> new EntityNotFoundException("Consulta não encontrada com o id: " + id)
                 );
 
-        mapper.atualizaConsultaDesdeRequest(consulta, request);
+        mapper.atualizaConsultaDesdeRequest(consulta, request, paciente);
 
         consulta = consultaRepository.save(consulta);
         return mapper.toResponse(consulta);

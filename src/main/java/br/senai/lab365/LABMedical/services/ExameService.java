@@ -60,7 +60,7 @@ public class ExameService {
                         () -> new EntityNotFoundException("Exame não encontrada com o id: " + id)
                 );
 
-        mapper.atualizaExameDesdeRequest(exame, request);
+        mapper.atualizaExameDesdeRequest(exame, request, paciente);
 
         exame = exameRepository.save(exame);
         return mapper.toResponse(exame);

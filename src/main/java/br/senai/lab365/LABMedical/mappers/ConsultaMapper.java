@@ -43,13 +43,13 @@ public class ConsultaMapper {
         );
     }
 
-    public void atualizaConsultaDesdeRequest(Consulta consulta, ConsultaRequest request) {
+    public void atualizaConsultaDesdeRequest(Consulta consulta, ConsultaRequest request, Paciente paciente) {
         if (request.getMotivo() != null) consulta.setMotivo(request.getMotivo());
         if (request.getDataConsulta() != null) consulta.setDataConsulta(request.getDataConsulta());
         if (request.getHorarioConsulta() != null) consulta.setHorarioConsulta(request.getHorarioConsulta());
         if (request.getDescricaoProblema() != null) consulta.setDescricaoProblema(request.getDescricaoProblema());
         if (request.getMedicacaoReceitada() != null) consulta.setMedicacaoReceitada(request.getMedicacaoReceitada());
         if (request.getDosagemPrecaucoes() != null) consulta.setDosagemPrecaucoes(request.getDosagemPrecaucoes());
-        if (request.getIdPaciente() != null) consulta.getPaciente().setId(request.getIdPaciente());
+        if (request.getIdPaciente() != null) paciente.getId();
     }
 }

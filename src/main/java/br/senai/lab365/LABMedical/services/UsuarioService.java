@@ -49,7 +49,7 @@ public class UsuarioService {
 
         Usuario usuario = mapper.toEntity(usuarioRequest);
         usuario.setPassword(senhaCriptografada);
-        usuario.setPassword(usuarioRequest.getPassword());
+//        usuario.setPassword(usuarioRequest.getPassword());
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         usuario.setPerfilList(Set.of(perfil));
 
@@ -64,7 +64,7 @@ public class UsuarioService {
             usuario.setEmail("admin@example.com");
             usuario.setDataNascimento(LocalDate.parse("2000-01-01"));
             usuario.setCpf("987.654.321-00");
-            usuario.setPassword("admin");
+//            usuario.setPassword("admin");
 //
             usuario.setPassword(passwordEncoder.encode("admin"));
 

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,7 +35,13 @@ public class Consulta {
     @Column(name = "dosagem_e_precaucoes")
     private String dosagemPrecaucoes;
 
-    @ManyToOne
-    @JoinColumn(name = "id_paciente", nullable = false)
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "id_paciente", nullable = false)
+//    private Paciente paciente;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_paciente", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Paciente paciente;
+
 }

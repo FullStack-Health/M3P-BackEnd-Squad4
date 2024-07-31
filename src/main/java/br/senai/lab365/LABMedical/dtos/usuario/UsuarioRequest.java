@@ -18,6 +18,8 @@ import java.time.LocalDate;
 @Table(name = "usuarios")
 public class UsuarioRequest {
 
+    private Long id;
+
     @NotBlank(message = "Nome não pode ser em branco")
     @Size(max = 255, message = "Nome deve ter no máximo 255 caracteres")
     private String nome;
