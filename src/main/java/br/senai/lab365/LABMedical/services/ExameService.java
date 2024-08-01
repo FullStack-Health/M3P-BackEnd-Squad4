@@ -64,8 +64,6 @@ public class ExameService {
 
         exame = exameRepository.save(exame);
         return mapper.toResponse(exame);
-
-
     }
 
     public void remove(Long id) {

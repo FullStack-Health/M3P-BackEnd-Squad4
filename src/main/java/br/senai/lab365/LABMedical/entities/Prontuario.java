@@ -33,6 +33,4 @@ public class Prontuario {
     @JoinColumn(name = "id_prontuario")
     private List<Consulta> consultas;
 
-
-
 }

@@ -31,23 +31,6 @@ public class PerfilService {
             repository.save(perfil);
         }
     }
-
-
-//    public void cadastra(PerfilRequest request) {
-//        repository.findByNomePerfil(request.nomePerfil())
-//                ifPresent(perfil -> {
-//                    throw new IllegalArgumentException("Perfil já cadastrado com o nome: " + request.nomePerfil());
-//                });
-//
-//        Perfil perfil = new Perfil();
-//        perfil.setNomePerfil(request.nomePerfil());
-//        repository.save(perfil);
-//    }
-
-//    public Perfil validaPerfil(String nomePerfil) {
-//        return repository.findByNomePerfil(nomePerfil)
-//                .orElseThrow(() -> new IllegalArgumentException("Perfil não existe com o nome: " + nomePerfil));
-//    }
 }
 
 

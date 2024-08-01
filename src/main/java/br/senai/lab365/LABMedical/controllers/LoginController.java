@@ -59,12 +59,4 @@ public class LoginController {
         return new LoginResponse(valorJwt, TEMPO_EXPIRACAO);
     }
 
-    @PostMapping("/login/admin")
-    @ResponseStatus(HttpStatus.OK)
-    public LoginResponse loginAdmin() {
-        LoginRequest loginRequest = new LoginRequest("admin@example.com", "admin");
-
-        return geraToken(loginRequest);
-    }
-
 }
