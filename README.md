@@ -78,3 +78,7 @@ Lembre-se de que o token JWT tem um tempo de expiração, então você precisar�
 
 ## Requisições do Insomnia
 As requisições do Insomnia para este projeto estão incluídas como um arquivo anexo. Você pode importar este arquivo no Insomnia para testar facilmente todas as rotas e funcionalidades da API.
+
+
+## Vídeo de Apresentação do Projeto\
+Veja a apresentação do projeto no link a seguir: https://drive.google.com/file/d/1bIH2XTFCyOPkyJPH8feaY48rAvYCwhDH/view?usp=sharing
