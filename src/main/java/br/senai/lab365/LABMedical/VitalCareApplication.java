@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class LabMedicalApplication {
+public class VitalCareApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(LabMedicalApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(VitalCareApplication.class, args);
 
 
 		UsuarioService usuarioService = context.getBean(UsuarioService.class);
