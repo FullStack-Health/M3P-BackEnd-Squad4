@@ -1,7 +1,7 @@
 # LABMedical
 
 ## Descrição do Projeto
-LABMedical é uma API RERTful para Back-End, construída em Java e Spring Boot e gerenciada com Maven, que visa resolver a dificuldade de gerenciar informações de usuários em um ambiente médico. Isso inclui o armazenamento seguro de dados pessoais, e dados médicos como informações de consultas, exames e prontuários de pacientes, bem como a atribuição de perfis de acesso de usuário.
+LABMedical é uma API RESTful para Back-End, construída em Java e Spring Boot e gerenciada com Maven, que visa resolver a dificuldade de gerenciar informações de pacientes em um ambiente médico. Isso inclui o armazenamento seguro de dados pessoais, e dados médicos como informações de consultas, exames e prontuários de pacientes, bem como a atribuição de perfis de acesso de usuário.
 
 
 ## Tecnologias Utilizadas
@@ -16,8 +16,8 @@ LABMedical é uma API RERTful para Back-End, construída em Java e Spring Boot e
 
 ## Funcionalidades
 O sistema oferece:
-- operações CRUD de pacientes, consultas, exames e prontuários;
-- controle de acesso usando JWT, Spring Security e a encriptação de senhas.
+- Operações CRUD de pacientes, consultas, exames e prontuários;
+- Controle de acesso usando JWT, Spring Security e a encriptação de senhas.
 
 
 ## Como Executar o Projeto
