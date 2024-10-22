@@ -66,7 +66,7 @@ public class UsuarioService {
             usuario.setCpf("987.654.321-00");
 //            usuario.setPassword("admin");
 //
-            usuario.setPassword(passwordEncoder.encode("admin"));
+            usuario.setPassword(passwordEncoder.encode("admin123"));
 
             Perfil perfil = perfilRepository.findByNomePerfil("ADMIN");
             Perfil manegedPerfil = entityManager.merge(perfil);
