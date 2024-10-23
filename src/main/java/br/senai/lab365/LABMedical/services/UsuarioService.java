@@ -3,8 +3,10 @@ package br.senai.lab365.LABMedical.services;
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.mappers.UsuarioMapper;
 import br.senai.lab365.LABMedical.mappers.UsuarioPreRegistroMapper;
 import br.senai.lab365.LABMedical.repositories.PerfilRepository;
 import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,6 +32,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioPreRegistroMapper preRegistroMapper;
+    private final UsuarioMapper usuarioMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PerfilRepository perfilRepository;
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
@@ -88,7 +92,7 @@ public class UsuarioService {
 
     public Usuario validaUsuario(LoginRequest loginRequest) throws RuntimeException {
         Usuario usuario = usuarioRepository
-                .findByEmail(loginRequest.email())
+                .findByEmailIgnoreCaseContaining(loginRequest.email())
                 .orElseThrow(
                         ()->new EntityNotFoundException("Nenhum usuário com este email foi cadastrado: "
                                 + loginRequest.email())
@@ -100,6 +104,8 @@ public class UsuarioService {
         return usuario;
     }
 
-
-
+    public List<UsuarioResponse> lista() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarioMapper.toResponse(usuarios);
+    }
 }
