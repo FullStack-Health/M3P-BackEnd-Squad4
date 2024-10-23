@@ -33,6 +33,9 @@ public class UsuarioMapper {
         if (perfil != null) {
             perfis.add(perfil);
         }
+
+        String senhaComMascara = mascaraSenha(request.getSenhaComMascara());
+
         return new Usuario(
                 null,
                 request.getNome(),
@@ -40,7 +43,8 @@ public class UsuarioMapper {
                 request.getDataNascimento(),
                 request.getCpf(),
                 request.getPassword(),
-                perfis
+                perfis,
+                senhaComMascara
         );
     }
 
@@ -60,7 +64,8 @@ public class UsuarioMapper {
                 usuario.getDataNascimento(),
                 usuario.getCpf(),
                 usuario.getPassword(),
-                listaNomesPerfis
+                listaNomesPerfis,
+                usuario.getSenhaComMascara()
         );
     }
 
@@ -68,5 +73,17 @@ public class UsuarioMapper {
         return usuarios.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public String mascaraSenha(String senhaOriginal) {
+        int length = senhaOriginal.length();
+        if (length <= 4) {
+            return senhaOriginal;
+        }
+        StringBuilder comMascara = new StringBuilder(senhaOriginal.substring(0, 4));
+        for (int i = 4; i < length; i++) {
+            comMascara.append('*');
+        }
+        return comMascara.toString();
     }
 }
