@@ -26,16 +26,16 @@ public class Usuario implements UserDetails {
     @Column(name = "id_usuario")
     private Long id;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String nome;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name = "data_nascimento", nullable = false)
+    @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
-    @Column(unique = true, nullable = false)
+//    @Column(unique = true, nullable = false)
     private String cpf;
 
     @Column(nullable = false)
@@ -48,6 +48,12 @@ public class Usuario implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "id_perfil")
     )
     private Set<Perfil> perfilList;
+
+    public Usuario(String email, String password, Set<Perfil> perfis) {
+        this.email = email;
+        this.password = password;
+        this.perfilList = perfis;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
