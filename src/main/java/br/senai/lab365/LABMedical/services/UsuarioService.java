@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,10 +44,6 @@ public class UsuarioService {
     public UsuarioPreRegistroResponse cadastra(UsuarioPreRegistroRequest usuarioRequest) {
         logger.info("Iniciando cadastro de usuário para o email: {}", usuarioRequest.getEmail());
 
-//        if (usuarioRepository.existsByCpf(usuarioRequest.getCpf())) {
-//            throw new DuplicateKeyException("CPF já cadastrado com este número: " + usuarioRequest.getCpf());
-//        }
-
         if (usuarioRepository.existsByEmail(usuarioRequest.getEmail())) {
             throw new DuplicateKeyException("O email " + usuarioRequest.getEmail() + " já foi cadastrado");
         }
@@ -57,17 +54,23 @@ public class UsuarioService {
             throw new IllegalArgumentException("Perfil inválido. Deve ser \"ADMIN\" ou \"MÉDICO\"");
         }
 
-        String senhaCriptografada = passwordEncoder.encode(usuarioRequest.getPassword());
+        String senhaOriginal = usuarioRequest.getPassword();
+        String senhaCriptografada = passwordEncoder.encode(senhaOriginal);
         logger.info("Senha criptografada com sucesso");
 
         Usuario usuario = preRegistroMapper.toEntity(usuarioRequest);
         usuario.setPassword(senhaCriptografada);
+        usuario.setSenhaComMascara(senhaOriginal);
         usuario.setPerfilList(Set.of(perfil));
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         logger.info("Usuário salvo com sucesso: {}", usuarioSalvo.getEmail());
 
-        return preRegistroMapper.toResponse(usuarioSalvo);
+        UsuarioPreRegistroResponse response = preRegistroMapper.toResponse(usuarioSalvo);
+        response.setSenhaComMascara(usuario.getSenhaComMascara());
+        logger.info("Senha com máscara: {}", usuario.getSenhaComMascara());
+
+        return response;
     }
 
     @Transactional
@@ -78,15 +81,18 @@ public class UsuarioService {
             usuario.setEmail("admin@example.com");
             usuario.setDataNascimento(LocalDate.parse("2000-01-01"));
             usuario.setCpf("987.654.321-00");
-//            usuario.setPassword("admin");
-//
-            usuario.setPassword(passwordEncoder.encode("admin123"));
+            String senhaOriginal = "admin123";
+            usuario.setPassword(passwordEncoder.encode(senhaOriginal));
+            usuario.setSenhaComMascara(senhaOriginal);
 
             Perfil perfil = perfilRepository.findByNomePerfil("ADMIN");
             Perfil manegedPerfil = entityManager.merge(perfil);
 
             usuario.setPerfilList(Collections.singleton(perfilRepository.findByNomePerfil("ADMIN")));
             usuarioRepository.save(usuario);
+
+            String senhaComMascara = usuarioMapper.mascaraSenha(senhaOriginal);
+            logger.info("Senha com máscara: {}", usuario.getSenhaComMascara());
         }
     }
 
@@ -94,11 +100,11 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository
                 .findByEmailIgnoreCaseContaining(loginRequest.email())
                 .orElseThrow(
-                        ()->new EntityNotFoundException("Nenhum usuário com este email foi cadastrado: "
+                        () -> new EntityNotFoundException("Nenhum usuário com este email foi cadastrado: "
                                 + loginRequest.email())
                 );
 
-        if(!passwordEncoder.matches(loginRequest.password(),usuario.getPassword())){
+        if (!passwordEncoder.matches(loginRequest.password(), usuario.getPassword())) {
             throw new EntityNotFoundException("Senha errada para este usuário");
         }
         return usuario;
@@ -106,6 +112,11 @@ public class UsuarioService {
 
     public List<UsuarioResponse> lista() {
         List<Usuario> usuarios = usuarioRepository.findAll();
-        return usuarioMapper.toResponse(usuarios);
+        return usuarios.stream()
+                .map(usuario -> {
+                    UsuarioResponse response = usuarioMapper.toResponse(usuario);
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }

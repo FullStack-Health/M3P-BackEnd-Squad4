@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 public class UsuarioResponse {
 
-
     private Long id;
     private String nome;
     private String email;
@@ -21,8 +20,9 @@ public class UsuarioResponse {
     private String cpf;
     private String password;
     private List<String> listaNomesPerfis;
+    private String senhaComMascara;
 
-    public UsuarioResponse(Long id, String nome, String email, LocalDate dataNascimento, String cpf, String password, List<String> listaNomesPerfis) {
+    public UsuarioResponse(Long id, String nome, String email, LocalDate dataNascimento, String cpf, String password, List<String> listaNomesPerfis, String senhaComMascara) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -30,5 +30,6 @@ public class UsuarioResponse {
         this.cpf = cpf;
         this.password = password;
         this.listaNomesPerfis = listaNomesPerfis;
+        this.senhaComMascara = senhaComMascara;
     }
 }

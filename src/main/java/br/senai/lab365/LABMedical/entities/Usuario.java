@@ -49,6 +49,10 @@ public class Usuario implements UserDetails {
     )
     private Set<Perfil> perfilList;
 
+    @Getter
+    @Column(name = "senha_mascara")
+    private String senhaComMascara;
+
     public Usuario(String email, String password, Set<Perfil> perfis) {
         this.email = email;
         this.password = password;
@@ -70,4 +74,15 @@ public class Usuario implements UserDetails {
         return password;
     }
 
+    public void setSenhaComMascara(String password) {
+        if (password == null || password.length() < 4) {
+            this.senhaComMascara = password;
+        } else {
+            StringBuilder senhaComMascara = new StringBuilder(password.substring(0, 4));
+            for (int i = 4; i < password.length(); i++) {
+                senhaComMascara.append("*");
+            }
+            this.senhaComMascara = senhaComMascara.toString();
+        }
+    }
 }

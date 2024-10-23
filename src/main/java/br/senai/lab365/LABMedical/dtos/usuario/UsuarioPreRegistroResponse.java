@@ -18,4 +18,5 @@ public class UsuarioPreRegistroResponse {
     private String email;
     private String password;
     private List<String> listaNomesPerfis;
+    private String senhaComMascara;
 }

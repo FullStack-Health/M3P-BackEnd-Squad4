@@ -48,4 +48,18 @@ public class UsuarioRequest {
     @NotBlank(message = "Nome do perfil não pode ser em branco")
     private String nomePerfil;    // Nome do perfil que será associado ao usuário no momento do cadastro
 
+    @Getter
+    private String senhaComMascara;
+
+    public void setSenhaComMascara(String password) {
+        if (password == null || password.length() < 4) {
+            this.senhaComMascara = password;
+        } else {
+            StringBuilder senhaComMascara = new StringBuilder(password.substring(0, 4));
+            for (int i = 4; i < password.length(); i++) {
+                senhaComMascara.append("*");
+            }
+            this.senhaComMascara = senhaComMascara.toString();
+        }
+    }
 }
