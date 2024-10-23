@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -32,4 +34,12 @@ public class UsuarioController {
         return response;
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<UsuarioResponse> lista() {
+        logger.info("GET /usuarios - Iniciando a busca de todos os usuários");
+        List<UsuarioResponse> usuarios = service.lista();
+        logger.info("GET /usuarios - Listagem concluída com sucesso");
+        return usuarios;
+    }
 }

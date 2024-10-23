@@ -1,6 +1,5 @@
 package br.senai.lab365.LABMedical.mappers;
 
-import br.senai.lab365.LABMedical.dtos.PerfilRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Perfil;
@@ -63,5 +62,11 @@ public class UsuarioMapper {
                 usuario.getPassword(),
                 listaNomesPerfis
         );
+    }
+
+    public List<UsuarioResponse> toResponse(List<Usuario> usuarios) {
+        return usuarios.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 }
