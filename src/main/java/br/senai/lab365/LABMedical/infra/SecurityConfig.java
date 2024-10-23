@@ -40,8 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/login")
                         .permitAll() // Acesso irrestrito
 
-                        .requestMatchers(HttpMethod.POST, "/usuarios", "/login/admin")
-                        .hasAuthority("SCOPE_ADMIN") // Criar usuários
+                        .requestMatchers(HttpMethod.POST, "/usuarios/pre-registro")
+                        .permitAll() // Acesso irrestrito
 
                         .requestMatchers(HttpMethod.POST, "/pacientes")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar paciente
