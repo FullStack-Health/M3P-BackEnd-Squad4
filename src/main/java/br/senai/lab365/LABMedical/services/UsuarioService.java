@@ -1,17 +1,19 @@
 package br.senai.lab365.LABMedical.services;
 
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
-import br.senai.lab365.LABMedical.mappers.UsuarioMapper;
+import br.senai.lab365.LABMedical.mappers.UsuarioPreRegistroMapper;
 import br.senai.lab365.LABMedical.repositories.PerfilRepository;
 import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,34 +28,42 @@ import java.util.Set;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private final UsuarioMapper mapper;
+    private final UsuarioPreRegistroMapper preRegistroMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PerfilRepository perfilRepository;
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    public UsuarioPreRegistroResponse cadastra(UsuarioPreRegistroRequest usuarioRequest) {
+        logger.info("Iniciando cadastro de usuário para o email: {}", usuarioRequest.getEmail());
 
-    public UsuarioResponse cadastra(UsuarioRequest usuarioRequest) {
-        if (usuarioRepository.existsByCpf(usuarioRequest.getCpf())) {
-            throw new DuplicateKeyException("CPF já cadastrado com este número: " + usuarioRequest.getCpf());
-        }
+//        if (usuarioRepository.existsByCpf(usuarioRequest.getCpf())) {
+//            throw new DuplicateKeyException("CPF já cadastrado com este número: " + usuarioRequest.getCpf());
+//        }
 
         if (usuarioRepository.existsByEmail(usuarioRequest.getEmail())) {
             throw new DuplicateKeyException("O email " + usuarioRequest.getEmail() + " já foi cadastrado");
         }
 
         Perfil perfil = perfilRepository.findByNomePerfil(usuarioRequest.getNomePerfil());
+        if (perfil == null || (!"ADMIN".equals(perfil.getNomePerfil())) && (!"MÉDICO".equals(perfil.getNomePerfil()))) {
+            logger.error("Perfil inválido: {}", usuarioRequest.getNomePerfil());
+            throw new IllegalArgumentException("Perfil inválido. Deve ser \"ADMIN\" ou \"MÉDICO\"");
+        }
 
         String senhaCriptografada = passwordEncoder.encode(usuarioRequest.getPassword());
+        logger.info("Senha criptografada com sucesso");
 
-        Usuario usuario = mapper.toEntity(usuarioRequest);
+        Usuario usuario = preRegistroMapper.toEntity(usuarioRequest);
         usuario.setPassword(senhaCriptografada);
-//        usuario.setPassword(usuarioRequest.getPassword());
-        Usuario usuarioSalvo = usuarioRepository.save(usuario);
         usuario.setPerfilList(Set.of(perfil));
 
-        return mapper.toResponse(usuarioSalvo);
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        logger.info("Usuário salvo com sucesso: {}", usuarioSalvo.getEmail());
+
+        return preRegistroMapper.toResponse(usuarioSalvo);
     }
 
     @Transactional
