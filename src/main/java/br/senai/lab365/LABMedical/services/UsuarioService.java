@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -91,7 +92,6 @@ public class UsuarioService {
             usuario.setPerfilList(Collections.singleton(perfilRepository.findByNomePerfil("ADMIN")));
             usuarioRepository.save(usuario);
 
-            String senhaComMascara = usuarioMapper.mascaraSenha(senhaOriginal);
             logger.info("Senha com máscara: {}", usuario.getSenhaComMascara());
         }
     }
@@ -113,10 +113,34 @@ public class UsuarioService {
     public List<UsuarioResponse> lista() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios.stream()
-                .map(usuario -> {
-                    UsuarioResponse response = usuarioMapper.toResponse(usuario);
-                    return response;
-                })
+                .map(usuarioMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public UsuarioResponse busca(Long id) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        return usuarioMapper.toResponse(
+                usuario.orElseThrow(
+                    ()-> new EntityNotFoundException("Usuário não encontrado com o id: " + id)));
+
+    }
+
+    public UsuarioResponse buscaPorIdOuPorEmail(Long id, String email) {
+        if (id == null && (email == null || email.isEmpty())) {
+            throw new IllegalArgumentException("ID ou email não fornecidos");
+        }
+
+        Optional<Usuario> usuario;
+        if (id != null) {
+            usuario = usuarioRepository.findById(id);
+        } else {
+            usuario = usuarioRepository.findByIdOrEmailIgnoreCaseContaining(id, email);
+        }
+
+        return usuarioMapper.toResponse(
+                usuario.orElseThrow(
+                        () -> new EntityNotFoundException("Usuário não encontrado com o id ou email fornecido")
+                )
+        );
     }
 }

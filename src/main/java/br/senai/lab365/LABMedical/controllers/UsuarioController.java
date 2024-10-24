@@ -1,9 +1,7 @@
 package br.senai.lab365.LABMedical.controllers;
 
-import br.senai.lab365.LABMedical.dtos.PerfilRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.services.UsuarioService;
 import jakarta.validation.Valid;
@@ -42,4 +40,36 @@ public class UsuarioController {
         logger.info("GET /usuarios - Listagem concluída com sucesso");
         return usuarios;
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioResponse busca(@PathVariable Long id) {
+        logger.info("GET /usuarios/{id} - Iniciando a busca usuário com id: {}", id);
+        UsuarioResponse usuario = service.busca(id);
+        logger.info("GET /usuarios/{id} - Busca concluída com sucesso: {}", id);
+        return usuario;
+    }
+
+    @GetMapping("/busca")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioResponse buscaPorIdOuPorEmail(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String email) {
+        if (id != null) {
+            logger.info("Iniciando a busca de usuário com id: {}", id);
+        } else if (email != null) {
+            logger.info("Iniciando a busca de usuário com email: {}", email);
+        } else {
+            logger.warn("Nenhum parâmetro de busca fornecido");
+            throw new IllegalArgumentException("Parâmetro de busca não fornecido");
+        }
+        UsuarioResponse usuarioBuscado = service.buscaPorIdOuPorEmail(id, email);
+        if (usuarioBuscado != null) {
+            logger.info("Busca concluída com sucesso: {}", usuarioBuscado);
+        } else {
+            logger.warn("Usuário não encontrado");
+        }
+        return usuarioBuscado;
+    }
+
 }
