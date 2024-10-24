@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,21 +31,21 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public LoginResponse geraToken(@RequestBody LoginRequest loginRequest) {
+
         logger.info("Recebendo requisição de login para o email: {}", loginRequest.email());
 
         Usuario usuario = usuarioService.validaUsuario(loginRequest);
         if (usuario == null) {
             logger.error("Falha ao autenticar o usuário: {}", loginRequest.email());
-            throw new RuntimeException("Usuário não encontrado ou credenciais inválidas.");
         }
-
         Instant agora = Instant.now();
-        String scope = usuario.getAuthorities()
+            String scope = usuario.getAuthorities()
                 .stream()
                 .map(autority -> autority.getAuthority())
                 .collect(Collectors.joining(" "));
-
+//        String scope = "ADMIN";
         JwtClaimsSet claims = JwtClaimsSet.builder()
+//                .issuer("self")
                 .issuedAt(agora)
                 .expiresAt(agora.plusSeconds(TEMPO_EXPIRACAO))
                 .subject(usuario.getEmail())
@@ -54,15 +53,10 @@ public class LoginController {
                 .build();
 
         var valorJwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
         logger.info("Usuário autenticado com sucesso: {}", loginRequest.email());
 
-        List<String> listaNomesPerfis = usuario.getAuthorities()
-                .stream()
-                .map(autoridade -> autoridade.getAuthority())
-                .collect(Collectors.toList());
-
-        return new LoginResponse(valorJwt, TEMPO_EXPIRACAO, listaNomesPerfis);
+        return new LoginResponse(valorJwt, TEMPO_EXPIRACAO);
     }
-
 
 }
