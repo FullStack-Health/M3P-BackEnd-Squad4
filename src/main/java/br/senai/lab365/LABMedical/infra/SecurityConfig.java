@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/usuarios/pre-registro")
                         .permitAll() // Acesso irrestrito
 
-                        .requestMatchers(HttpMethod.GET, "/usuarios")
+                        .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Obter usuários
 
                         .requestMatchers(HttpMethod.POST, "/pacientes")
