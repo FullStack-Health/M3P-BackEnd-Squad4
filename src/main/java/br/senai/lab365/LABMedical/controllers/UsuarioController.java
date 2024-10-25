@@ -23,24 +23,6 @@ public class UsuarioController {
         this.service = service;
     }
 
-    @PostMapping("/pre-registro")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioPreRegistroResponse cadastra(@Valid @RequestBody UsuarioPreRegistroRequest usuarioRequest) {
-        logger.info("POST/usuarios/pre-registro para o email: {}", usuarioRequest.getEmail());
-        UsuarioPreRegistroResponse response = service.cadastra(usuarioRequest);
-        logger.info("POST/usuarios/pre-registro usuário cadastrado com sucesso: {}", response.getEmail());
-        return response;
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<UsuarioResponse> lista() {
-        logger.info("GET /usuarios - Iniciando a busca de todos os usuários");
-        List<UsuarioResponse> usuarios = service.lista();
-        logger.info("GET /usuarios - Listagem concluída com sucesso");
-        return usuarios;
-    }
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UsuarioResponse busca(@PathVariable Long id) {
@@ -50,15 +32,23 @@ public class UsuarioController {
         return usuario;
     }
 
-    @GetMapping("/busca")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UsuarioResponse> buscaPorIdOuEmail(
             @RequestParam(required = false)  Long id,
             @RequestParam(required = false)  String email) {
-        logger.info("GET /usuarios - Iniciando a busca de usuários por ID: {} ou email: {}", id, email);
-        List<UsuarioResponse> usuariosBuscados = service.buscaPorIdOuPorEmail(id, email);
-        logger.info("GET /usuarios - Busca concluída com sucesso!");
-        return usuariosBuscados;
+        if (id != null || email != null) {
+            logger.info("GET /usuarios - Iniciando a busca de usuários por ID: {} ou email: {}", id, email);
+        } else {
+            logger.info("GET /usuarios - Iniciando a listagem de todos os usuários");
+        }
+        List<UsuarioResponse> usuarios = service.lista(id, email);
+        if (id != null || email != null) {
+            logger.info("GET /usuarios - Busca concluída com sucesso!");
+        } else {
+            logger.info("GET /usuarios - Listagem concluída com sucesso");
+        }
+        return usuarios;
     }
 
 }

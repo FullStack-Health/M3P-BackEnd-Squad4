@@ -2,8 +2,11 @@ package br.senai.lab365.LABMedical.controllers;
 
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
 import br.senai.lab365.LABMedical.dtos.login.LoginResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.services.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,5 +67,14 @@ public class LoginController {
         return new LoginResponse(valorJwt, TEMPO_EXPIRACAO, listaNomesPerfis);
     }
 
+
+    @PostMapping("/usuarios/pre-registro")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UsuarioPreRegistroResponse cadastra(@Valid @RequestBody UsuarioPreRegistroRequest usuarioRequest) {
+        logger.info("POST/usuarios/pre-registro para o email: {}", usuarioRequest.getEmail());
+        UsuarioPreRegistroResponse response = usuarioService.cadastra(usuarioRequest);
+        logger.info("POST/usuarios/pre-registro usuário cadastrado com sucesso: {}", response.getEmail());
+        return response;
+    }
 
 }
