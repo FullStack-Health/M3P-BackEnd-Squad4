@@ -125,22 +125,17 @@ public class UsuarioService {
 
     }
 
-    public UsuarioResponse buscaPorIdOuPorEmail(Long id, String email) {
-        if (id == null && (email == null || email.isEmpty())) {
-            throw new IllegalArgumentException("ID ou email não fornecidos");
-        }
+    public List<UsuarioResponse> buscaPorIdOuPorEmail(Long id, String email) {
 
-        Optional<Usuario> usuario;
+        List<Usuario> usuarios;
         if (id != null) {
-            usuario = usuarioRepository.findById(id);
+            usuarios = usuarioRepository.findAllById(id);
         } else {
-            usuario = usuarioRepository.findByIdOrEmailIgnoreCaseContaining(id, email);
+            usuarios = usuarioRepository.findAllByEmailIgnoreCaseContaining(email);
         }
-
-        return usuarioMapper.toResponse(
-                usuario.orElseThrow(
-                        () -> new EntityNotFoundException("Usuário não encontrado com o id ou email fornecido")
-                )
-        );
+        return usuarios.stream()
+                .map(usuarioMapper::toResponse)
+                .collect(Collectors.toList());
     }
+
 }
