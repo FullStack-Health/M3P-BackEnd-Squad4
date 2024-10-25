@@ -110,12 +110,12 @@ public class UsuarioService {
         return usuario;
     }
 
-    public List<UsuarioResponse> lista() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
-        return usuarios.stream()
-                .map(usuarioMapper::toResponse)
-                .collect(Collectors.toList());
-    }
+//    public List<UsuarioResponse> lista() {
+//        List<Usuario> usuarios = usuarioRepository.findAll();
+//        return usuarios.stream()
+//                .map(usuarioMapper::toResponse)
+//                .collect(Collectors.toList());
+//    }
 
     public UsuarioResponse busca(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
@@ -125,13 +125,15 @@ public class UsuarioService {
 
     }
 
-    public List<UsuarioResponse> buscaPorIdOuPorEmail(Long id, String email) {
+    public List<UsuarioResponse> lista(Long id, String email) {
 
         List<Usuario> usuarios;
         if (id != null) {
             usuarios = usuarioRepository.findAllById(id);
-        } else {
+        } else if (email != null) {
             usuarios = usuarioRepository.findAllByEmailIgnoreCaseContaining(email);
+        } else {
+            usuarios = usuarioRepository.findAll();
         }
         return usuarios.stream()
                 .map(usuarioMapper::toResponse)
