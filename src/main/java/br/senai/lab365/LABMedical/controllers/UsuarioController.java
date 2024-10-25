@@ -52,24 +52,13 @@ public class UsuarioController {
 
     @GetMapping("/busca")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioResponse buscaPorIdOuPorEmail(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String email) {
-        if (id != null) {
-            logger.info("Iniciando a busca de usuário com id: {}", id);
-        } else if (email != null) {
-            logger.info("Iniciando a busca de usuário com email: {}", email);
-        } else {
-            logger.warn("Nenhum parâmetro de busca fornecido");
-            throw new IllegalArgumentException("Parâmetro de busca não fornecido");
-        }
-        UsuarioResponse usuarioBuscado = service.buscaPorIdOuPorEmail(id, email);
-        if (usuarioBuscado != null) {
-            logger.info("Busca concluída com sucesso: {}", usuarioBuscado);
-        } else {
-            logger.warn("Usuário não encontrado");
-        }
-        return usuarioBuscado;
+    public List<UsuarioResponse> buscaPorIdOuEmail(
+            @RequestParam(required = false)  Long id,
+            @RequestParam(required = false)  String email) {
+        logger.info("GET /usuarios - Iniciando a busca de usuários por ID: {} ou email: {}", id, email);
+        List<UsuarioResponse> usuariosBuscados = service.buscaPorIdOuPorEmail(id, email);
+        logger.info("GET /usuarios - Busca concluída com sucesso!");
+        return usuariosBuscados;
     }
 
 }
