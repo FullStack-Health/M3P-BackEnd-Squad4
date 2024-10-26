@@ -1,9 +1,7 @@
 package br.senai.lab365.LABMedical.services;
 
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.*;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.mappers.UsuarioMapper;
@@ -110,13 +108,6 @@ public class UsuarioService {
         return usuario;
     }
 
-//    public List<UsuarioResponse> lista() {
-//        List<Usuario> usuarios = usuarioRepository.findAll();
-//        return usuarios.stream()
-//                .map(usuarioMapper::toResponse)
-//                .collect(Collectors.toList());
-//    }
-
     public UsuarioResponse busca(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         return usuarioMapper.toResponse(
@@ -140,4 +131,18 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    public UsuarioPreRegistroResponse redefine(String email, RedefinicaoSenhaRequest request) {
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                ()-> new EntityNotFoundException("Usuário não encontrado com o email: " + email));
+
+        String senhaEncriptografada = passwordEncoder.encode(request.getPassword());
+        usuario.setPassword(senhaEncriptografada);
+
+        String senhaComMascara = preRegistroMapper.mascaraSenha(request.getPassword());
+        usuario.setSenhaComMascara(senhaComMascara);
+
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+
+        return preRegistroMapper.toResponse(usuarioAtualizado);
+    }
 }
