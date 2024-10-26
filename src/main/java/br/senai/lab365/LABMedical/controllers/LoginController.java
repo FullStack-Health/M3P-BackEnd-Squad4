@@ -77,7 +77,7 @@ public class LoginController {
     }
 
     @PatchMapping("/usuarios/email/{email}/redefinir-senha")
-    public UsuarioPreRegistroResponse redefineSenha(@RequestParam String email,
+    public UsuarioPreRegistroResponse redefineSenha(@PathVariable String email,
                                                     @Valid @RequestBody RedefinicaoSenhaRequest request) {
         logger.info("PATCH /usuarios/email/{email}/redefinir-senha - Iniciando a redefinição de senha do usuário: {}, novaSenha: {}", email, request.getPassword());
         UsuarioPreRegistroResponse response = usuarioService.redefine(email, request);
