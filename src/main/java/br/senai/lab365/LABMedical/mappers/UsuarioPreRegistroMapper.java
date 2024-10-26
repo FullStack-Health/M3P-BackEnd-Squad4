@@ -62,7 +62,7 @@ public class UsuarioPreRegistroMapper {
         );
     }
 
-    private String mascaraSenha(String senhaOriginal) {
+    public String mascaraSenha(String senhaOriginal) {
         if (senhaOriginal == null) {
             return null;
         }

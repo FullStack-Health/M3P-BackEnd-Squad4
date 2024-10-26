@@ -38,61 +38,64 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/login")
-                        .permitAll() // Acesso irrestrito
+                        .permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/usuarios/pre-registro")
-                        .permitAll() // Acesso irrestrito
+                        .permitAll()
+
+                        .requestMatchers(HttpMethod.PATCH, "/usuarios/email/{email}/redefinir-senha")
+                        .permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Obter usuários
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.POST, "/pacientes")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar paciente
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/pacientes/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE") // Obter paciente por ID (SCOPE_PACIENTE deve verificar apenas seu próprio ID)
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE")
 
                         .requestMatchers(HttpMethod.PUT, "/pacientes/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Atualizar paciente por ID
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.DELETE, "/pacientes/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Excluir paciente por ID
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/pacientes")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar pacientes
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.POST, "/consultas")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar consulta
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/consultas/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE") // Obter consulta por ID (SCOPE_PACIENTE deve verificar apenas suas próprias consultas)
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE")
 
                         .requestMatchers(HttpMethod.PUT, "/consultas/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Atualizar consulta por ID
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.DELETE, "/consultas/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Excluir consulta por ID
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.POST, "/exames")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Criar exame
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/exames/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE") // Obter exame por ID (SCOPE_PACIENTE deve verificar apenas seus próprios exames)
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE")
 
                         .requestMatchers(HttpMethod.PUT, "/exames/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Atualizar exame por ID
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.DELETE, "/exames/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Excluir exame por ID
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/pacientes/prontuarios")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar pacientes para prontuário
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/pacientes/{id}/prontuarios")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar prontuários do paciente
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/dashboard")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO") // Listar dados do dashboard
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .anyRequest()
                         .authenticated()
