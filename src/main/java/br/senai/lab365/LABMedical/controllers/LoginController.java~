@@ -2,12 +2,18 @@ package br.senai.lab365.LABMedical.controllers;
 
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
 import br.senai.lab365.LABMedical.dtos.login.LoginResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.services.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,27 +32,27 @@ public class LoginController {
 
     private final JwtEncoder jwtEncoder;
     private final UsuarioService usuarioService;
-    private static long TEMPO_EXPIRACAO = 36000L;
+    private static long TEMPO_EXPIRACAO = 36000L; // 10 horas
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public LoginResponse geraToken(@RequestBody LoginRequest loginRequest) {
-
+    public ResponseEntity<Void> geraToken(@RequestBody LoginRequest loginRequest) {
         logger.info("Recebendo requisição de login para o email: {}", loginRequest.email());
 
         Usuario usuario = usuarioService.validaUsuario(loginRequest);
         if (usuario == null) {
             logger.error("Falha ao autenticar o usuário: {}", loginRequest.email());
+            throw new RuntimeException("Usuário não encontrado ou credenciais inválidas.");
         }
+
         Instant agora = Instant.now();
-            String scope = usuario.getAuthorities()
+        String scope = usuario.getAuthorities()
                 .stream()
                 .map(autority -> autority.getAuthority())
                 .collect(Collectors.joining(" "));
-//        String scope = "ADMIN";
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
-//                .issuer("self")
                 .issuedAt(agora)
                 .expiresAt(agora.plusSeconds(TEMPO_EXPIRACAO))
                 .subject(usuario.getEmail())
@@ -53,10 +60,29 @@ public class LoginController {
                 .build();
 
         var valorJwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
         logger.info("Usuário autenticado com sucesso: {}", loginRequest.email());
 
-        return new LoginResponse(valorJwt, TEMPO_EXPIRACAO);
+        // Criação do cookie
+        ResponseCookie cookie = ResponseCookie.from("token", valorJwt)
+                .httpOnly(true) // Cookie não acessível via JavaScript
+                .secure(true) // Apenas enviado em conexões HTTPS
+                .path("/") // Disponível para toda a aplicação
+                .maxAge(TEMPO_EXPIRACAO) // Duração do cookie
+                .sameSite("Strict") // Restringe o envio do cookie a requisições do mesmo site
+                .build();
+
+        // Retorna o cookie no cabeçalho da resposta
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 
+    @PostMapping("/usuarios/pre-registro")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UsuarioPreRegistroResponse cadastra(@Valid @RequestBody UsuarioPreRegistroRequest usuarioRequest) {
+        logger.info("POST/usuarios/pre-registro para o email: {}", usuarioRequest.getEmail());
+        UsuarioPreRegistroResponse response = usuarioService.cadastra(usuarioRequest);
+        logger.info("POST/usuarios/pre-registro usuário cadastrado com sucesso: {}", response.getEmail());
+        return response;
+    }
 }
