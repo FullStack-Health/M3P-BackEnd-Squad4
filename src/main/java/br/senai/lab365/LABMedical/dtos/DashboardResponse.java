@@ -15,4 +15,5 @@ public class DashboardResponse {
     private Long numeroPacientes;
     private Long numeroConsultas;
     private Long numeroExames;
+    private Long numeroUsuarios;
 }
