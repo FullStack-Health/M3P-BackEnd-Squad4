@@ -22,4 +22,6 @@ public class Dashboard {
     private Long numeroPacientes;
     private Long numeroConsultas;
     private Long numeroExames;
+    private Long numeroUsuarios;
+
 }
