@@ -38,6 +38,8 @@ public class Usuario implements UserDetails {
 //    @Column(unique = true, nullable = false)
     private String cpf;
 
+    private String telefone;
+
     @Column(nullable = false)
     private String password;
 

@@ -1,9 +1,13 @@
 package br.senai.lab365.LABMedical.services;
 
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
+import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.mappers.UsuarioMapper;
@@ -110,13 +114,6 @@ public class UsuarioService {
         return usuario;
     }
 
-//    public List<UsuarioResponse> lista() {
-//        List<Usuario> usuarios = usuarioRepository.findAll();
-//        return usuarios.stream()
-//                .map(usuarioMapper::toResponse)
-//                .collect(Collectors.toList());
-//    }
-
     public UsuarioResponse busca(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         return usuarioMapper.toResponse(
@@ -138,6 +135,28 @@ public class UsuarioService {
         return usuarios.stream()
                 .map(usuarioMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public List<UsuarioResponse> buscaPorPerfil(String nomePerfil) {
+        List<Usuario> usuarios = usuarioRepository.findByPerfilListNomePerfil(nomePerfil);
+        List<UsuarioResponse> response = usuarios.stream()
+                .map(usuarioMapper::toResponse)
+                .toList();
+        return response;
+    }
+
+    public UsuarioResponse atualiza(Long id, UsuarioRequest request) {
+        if (request.getEmail() == null) {
+            throw new IllegalArgumentException("O email do usuário não pode ser nulo.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Usuário não encontrado com o id: " + id));
+
+        usuarioMapper.toRequest(usuario, request);
+
+        usuario = usuarioRepository.save(usuario);
+        return usuarioMapper.toResponse(usuario);
     }
 
 }

@@ -15,16 +15,18 @@ public class UsuarioResponse {
     private String email;
     private LocalDate dataNascimento;
     private String cpf;
+    private String telefone;
     private String password;
     private List<String> listaNomesPerfis;
     private String senhaComMascara;
 
-    public UsuarioResponse(Long id, String nome, String email, LocalDate dataNascimento, String cpf, String password, List<String> listaNomesPerfis, String senhaComMascara) {
+    public UsuarioResponse(Long id, String nome, String email, LocalDate dataNascimento, String cpf, String telefone, String password, List<String> listaNomesPerfis, String senhaComMascara) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.dataNascimento = dataNascimento;
         this.cpf = cpf;
+        this.telefone = telefone;
         this.password = password;
         this.listaNomesPerfis = listaNomesPerfis;
         this.senhaComMascara = senhaComMascara;

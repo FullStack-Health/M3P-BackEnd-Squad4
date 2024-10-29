@@ -38,6 +38,7 @@ public class UsuarioPreRegistroMapper {
                 request.getEmail(),
                 null,
                 null,
+                null,
                 request.getPassword(),
                 perfis,
                 senhaComMascara

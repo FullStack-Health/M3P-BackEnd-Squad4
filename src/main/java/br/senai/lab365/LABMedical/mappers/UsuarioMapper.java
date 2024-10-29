@@ -42,6 +42,7 @@ public class UsuarioMapper {
                 request.getEmail(),
                 request.getDataNascimento(),
                 request.getCpf(),
+                request.getTelefone(),
                 request.getPassword(),
                 perfis,
                 senhaComMascara
@@ -63,6 +64,7 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getDataNascimento(),
                 usuario.getCpf(),
+                usuario.getTelefone(),
                 usuario.getPassword(),
                 listaNomesPerfis,
                 usuario.getSenhaComMascara()
@@ -85,5 +87,22 @@ public class UsuarioMapper {
             comMascara.append('*');
         }
         return comMascara.toString();
+    }
+
+    public void toRequest(Usuario usuario, UsuarioRequest request) {
+        if (usuario == null || request == null) {
+            return;
+        }
+
+        usuario.setNome(request.getNome());
+        usuario.setEmail(request.getEmail());
+        usuario.setDataNascimento(request.getDataNascimento());
+        usuario.setCpf(request.getCpf());
+        usuario.setTelefone(request.getTelefone());
+
+        Perfil perfil = perfilRepository.findByNomePerfil(request.getNomePerfil());
+        if (perfil != null) {
+            usuario.setPerfilList(Set.of(perfil));
+        }
     }
 }
