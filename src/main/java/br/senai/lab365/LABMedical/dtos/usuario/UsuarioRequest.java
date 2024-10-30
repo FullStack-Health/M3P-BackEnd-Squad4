@@ -41,7 +41,7 @@ public class UsuarioRequest {
     @Pattern(regexp = "\\(\\d{2}\\)\\d{4,5}-\\d{4}", message = "Telefone inválido. Enviar no formato (00)00000-0000 ou (00)0000-0000")
     private String telefone;
 
-    @NotBlank(message = "Senha não pode ser em branco")
+//    @NotBlank(message = "Senha não pode ser em branco")
     @Size(max = 255, message = "Senha deve ter no máximo 255 caracteres")
     private String password;
 

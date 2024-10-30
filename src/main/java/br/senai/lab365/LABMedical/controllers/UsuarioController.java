@@ -73,4 +73,11 @@ public class UsuarioController {
         return usuario;
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remove(@PathVariable Long id) {
+        logger.info("DELETE /usuarios/{} - Iniciando a remoção do usuário com id: {}", id, id);
+        service.remove(id);
+        logger.info("DELETE /usuarios/{} - Remoção concluída com sucesso: {}", id, id);
+    }
 }

@@ -53,6 +53,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/usuarios/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
                         .requestMatchers(HttpMethod.POST, "/pacientes")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 

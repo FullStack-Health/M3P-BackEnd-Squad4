@@ -159,4 +159,17 @@ public class UsuarioService {
         return usuarioMapper.toResponse(usuario);
     }
 
+    public void remove(Long id) {
+        if(!usuarioRepository.existsById(id)) {
+            throw new EntityNotFoundException("Usuário não encontrado com o id: " + id);
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                        .orElseThrow(()-> new EntityNotFoundException("Usuário não encontrado com o id: " + id));
+
+        usuario.setPerfilList(Collections.emptySet());
+        usuarioRepository.save(usuario);
+
+        usuarioRepository.deleteById(id);
+    }
 }
