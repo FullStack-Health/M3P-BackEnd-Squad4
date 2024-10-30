@@ -1,6 +1,13 @@
 package br.senai.lab365.LABMedical.services;
 
 import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
+import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
+import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.dtos.usuario.*;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
@@ -131,7 +138,43 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public UsuarioPreRegistroResponse redefine(String email, RedefinicaoSenhaRequest request) {
+    public List<UsuarioResponse> buscaPorPerfil(String nomePerfil) {
+        List<Usuario> usuarios = usuarioRepository.findByPerfilListNomePerfil(nomePerfil);
+        List<UsuarioResponse> response = usuarios.stream()
+                .map(usuarioMapper::toResponse)
+                .toList();
+        return response;
+    }
+
+    public UsuarioResponse atualiza(Long id, UsuarioRequest request) {
+        if (request.getEmail() == null) {
+            throw new IllegalArgumentException("O email do usuário não pode ser nulo.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Usuário não encontrado com o id: " + id));
+
+        usuarioMapper.toRequest(usuario, request);
+
+        usuario = usuarioRepository.save(usuario);
+        return usuarioMapper.toResponse(usuario);
+    }
+
+    public void remove(Long id) {
+        if(!usuarioRepository.existsById(id)) {
+            throw new EntityNotFoundException("Usuário não encontrado com o id: " + id);
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                        .orElseThrow(()-> new EntityNotFoundException("Usuário não encontrado com o id: " + id));
+
+        usuario.setPerfilList(Collections.emptySet());
+        usuarioRepository.save(usuario);
+
+        usuarioRepository.deleteById(id);
+    }
+
+  public UsuarioPreRegistroResponse redefine(String email, RedefinicaoSenhaRequest request) {
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
                 ()-> new EntityNotFoundException("Usuário não encontrado com o email: " + email));
 

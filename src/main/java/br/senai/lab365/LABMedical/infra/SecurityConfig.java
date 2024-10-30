@@ -14,6 +14,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
@@ -43,10 +44,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/usuarios/pre-registro")
                         .permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/usuarios/perfil/{nomePerfil}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
                         .requestMatchers(HttpMethod.PATCH, "/usuarios/email/{email}/redefinir-senha")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/{id}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.POST, "/pacientes")
@@ -100,7 +110,7 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))

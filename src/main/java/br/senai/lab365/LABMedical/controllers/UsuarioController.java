@@ -2,8 +2,12 @@ package br.senai.lab365.LABMedical.controllers;
 
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
+import br.senai.lab365.LABMedical.entities.Exame;
+import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.services.UsuarioService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,4 +55,29 @@ public class UsuarioController {
         return usuarios;
     }
 
+    @GetMapping("/perfil/{nomePerfil}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UsuarioResponse> buscaPorPerfil(@PathVariable String nomePerfil) {
+        logger.info("GET /usuarios/perfil/{} - Iniciando busca de usuários com o perfil: {}", nomePerfil, nomePerfil);
+        List<UsuarioResponse> usuarios = service.buscaPorPerfil(nomePerfil);
+        logger.info("GET /usuarios/perfil/{} - Busca concluída com sucesso! Perfil: {}", nomePerfil, nomePerfil);
+        return usuarios;
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioResponse atualiza(@PathVariable Long id, @RequestBody @Valid UsuarioRequest request) {
+        logger.info("PUT /usuarios/{} - Iniciando a atualização do usuário com id: {}", id, id);
+        UsuarioResponse usuario = service.atualiza(id, request);
+        logger.info("PUT /usuarios/{} - Atualização concluída com sucesso: {}", id, id);
+        return usuario;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remove(@PathVariable Long id) {
+        logger.info("DELETE /usuarios/{} - Iniciando a remoção do usuário com id: {}", id, id);
+        service.remove(id);
+        logger.info("DELETE /usuarios/{} - Remoção concluída com sucesso: {}", id, id);
+    }
 }

@@ -1,5 +1,6 @@
 package br.senai.lab365.LABMedical.repositories;
 
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findAllById(Long id);
     Optional<Usuario> findById(Long id);
     List<Usuario> findAll();
+    List<Usuario> findByPerfilListNomePerfil(String nomePerfil);
     Optional<Usuario> findByEmail(String email);
 }

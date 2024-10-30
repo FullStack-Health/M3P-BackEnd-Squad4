@@ -66,7 +66,6 @@ public class LoginController {
         return new LoginResponse(valorJwt, TEMPO_EXPIRACAO, listaNomesPerfis);
     }
 
-
     @PostMapping("/usuarios/pre-registro")
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioPreRegistroResponse cadastra(@Valid @RequestBody UsuarioPreRegistroRequest usuarioRequest) {
