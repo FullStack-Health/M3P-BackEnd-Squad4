@@ -29,22 +29,14 @@ public class UsuarioMapper {
         }
 
         Perfil perfil = perfilRepository.findByNomePerfil(request.getNomePerfil());
-        Set<Perfil> perfis = new HashSet<>();
-        if (perfil != null) {
-            perfis.add(perfil);
-        }
+        Set<Perfil> perfis = perfil != null ? Set.of(perfil) : new HashSet<>();
 
-        String senhaComMascara = mascaraSenha(request.getSenhaComMascara());
+        String senhaComMascara = mascaraSenha(request.getPassword());
 
         return new Usuario(
-                null,
-                request.getNome(),
                 request.getEmail(),
-                request.getDataNascimento(),
-                request.getCpf(),
                 request.getPassword(),
-                perfis,
-                senhaComMascara
+                perfis
         );
     }
 
@@ -53,9 +45,11 @@ public class UsuarioMapper {
             return null;
         }
 
-        List<String> listaNomesPerfis = usuario.getPerfilList().stream()
+        List<String> listaNomesPerfis = usuario.getPerfilList() != null
+                ? usuario.getPerfilList().stream()
                 .map(Perfil::getNomePerfil)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+                : List.of();
 
         return new UsuarioResponse(
                 usuario.getId(),

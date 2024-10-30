@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,14 +47,34 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/usuarios/email/{email}/redefinir-senha")
                         .permitAll()
 
+                        //Controle de acesso perfil
                         .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
+                        //Pacientes: Apenas admin e médico podem criar
                         .requestMatchers(HttpMethod.POST, "/pacientes")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
-                        .requestMatchers(HttpMethod.GET, "/pacientes/{id}")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE")
+                        //Adicionado: Restringe acesso ao prontuário do próprio paciente
+                        .requestMatchers(HttpMethod.GET, "/pacientes/{id}/prontuarios")
+                        .access((authentication, context) -> {
+                            // Obtém o ID do paciente da URL
+                            String patientIdFromRequest = context.getVariables().get("id").toString();
+
+                            // Extrai o ID do paciente do token JWT
+                            String tokenPatientId = authentication.get().getAuthorities().stream()
+                                    .filter(granted -> granted.getAuthority().startsWith("SCOPE_PACIENTE:"))
+                                    .map(granted -> granted.getAuthority().split(":")[1])
+                                    .findFirst()
+                                    .orElse("");
+
+                            // Retorna uma AuthorizationDecision baseada na comparação dos IDs
+                            return new AuthorizationDecision(tokenPatientId.equals(patientIdFromRequest));
+                        })
+
+                        //Retirado
+                        //.requestMatchers(HttpMethod.GET, "/pacientes/{id}")
+                        //.hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE")
 
                         .requestMatchers(HttpMethod.PUT, "/pacientes/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")

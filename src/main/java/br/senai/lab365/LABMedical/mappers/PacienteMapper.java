@@ -4,17 +4,20 @@ import br.senai.lab365.LABMedical.dtos.paciente.EnderecoRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
+import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.repositories.PerfilRepository;
 import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
 import jakarta.validation.Valid;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class PacienteMapper {
@@ -22,11 +25,20 @@ public class PacienteMapper {
     private final EnderecoMapper enderecoMapper;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PerfilRepository perfilRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public PacienteMapper(EnderecoMapper enderecoMapper, UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
+    public PacienteMapper(EnderecoMapper enderecoMapper,
+                          UsuarioRepository usuarioRepository,
+                          UsuarioMapper usuarioMapper,
+                          PerfilRepository perfilRepository,
+                          PasswordEncoder passwordEncoder)
+    {
         this.enderecoMapper = enderecoMapper;
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
+        this.perfilRepository = perfilRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Paciente toEntity(PacienteRequest pacienteRequest) {
@@ -34,10 +46,28 @@ public class PacienteMapper {
             return null;
         }
 
-        UsuarioRequest usuarioRequest = Optional.ofNullable(pacienteRequest.getUsuario())
-                .orElseThrow(() -> new IllegalArgumentException("UsuarioRequest não pode ser null"));
+        Usuario usuario = new Usuario();
+        usuario.setEmail(pacienteRequest.getEmail());
 
-        Long usuarioId = usuarioRequest.getId();
+        // Criptografando a senha e armazenando corretamente
+        String senhaCriptografada = passwordEncoder.encode(pacienteRequest.getCpf().replaceAll("\\D", ""));
+        usuario.setPassword(senhaCriptografada);  // Salva a senha criptografada
+
+        // Criando a máscara da senha
+        String mascaraSenha = "****" + pacienteRequest.getCpf().substring(pacienteRequest.getCpf().length() - 3);
+        usuario.setSenhaComMascara(mascaraSenha);
+
+        usuario.setCpf(pacienteRequest.getCpf());
+        usuario.setDataNascimento(pacienteRequest.getDataNascimento());
+        usuario.setNome(pacienteRequest.getNome());
+
+        // Recupera o perfil do paciente e o adiciona
+        Perfil perfilPaciente = perfilRepository.findByNomePerfil("PACIENTE");
+        Set<Perfil> perfis = new HashSet<>();
+        if (perfilPaciente != null) {
+            perfis.add(perfilPaciente);
+        }
+        usuario.setPerfilList(perfis);
 
         return new Paciente(
                 null,
@@ -58,7 +88,7 @@ public class PacienteMapper {
                 pacienteRequest.getNumeroConvenio(),
                 pacienteRequest.getValidadeConvenio(),
                 enderecoMapper.toEntity(pacienteRequest.getEndereco()),
-                usuarioRepository.getReferenceById(usuarioId)
+                usuario
         );
     }
 
@@ -89,7 +119,7 @@ public class PacienteMapper {
                 paciente.getValidadeConvenio(),
                 enderecoMapper.toResponse(paciente.getEndereco()),
                 usuarioMapper.toResponse(usuarioRepository.getReferenceById(usuarioId))
-                );
+        );
     }
 
     public void atualizaPacienteDesdeRequest(Paciente paciente, PacienteRequest request) {

@@ -47,29 +47,40 @@ public class UsuarioService {
             throw new DuplicateKeyException("O email " + usuarioRequest.getEmail() + " já foi cadastrado");
         }
 
+        // Verificar se o perfil é válido
         Perfil perfil = perfilRepository.findByNomePerfil(usuarioRequest.getNomePerfil());
-        if (perfil == null || (!"ADMIN".equals(perfil.getNomePerfil())) && (!"MÉDICO".equals(perfil.getNomePerfil()))) {
+        if (perfil == null) {
             logger.error("Perfil inválido: {}", usuarioRequest.getNomePerfil());
-            throw new IllegalArgumentException("Perfil inválido. Deve ser \"ADMIN\" ou \"MÉDICO\"");
+            throw new IllegalArgumentException("Perfil inválido. Deve ser 'ADMIN', 'MÉDICO' ou 'PACIENTE'");
         }
 
+        // Criptografar a senha antes de salvar (Garante consistência)
         String senhaOriginal = usuarioRequest.getPassword();
-        String senhaCriptografada = passwordEncoder.encode(senhaOriginal);
-        logger.info("Senha criptografada com sucesso");
+        logger.info("Senha original recebida: {}", senhaOriginal);
 
+        String senhaCriptografada = passwordEncoder.encode(senhaOriginal);
+        logger.info("Senha criptografada: {}", senhaCriptografada);
+
+        // Criando e salvando o usuário com a senha criptografada
         Usuario usuario = preRegistroMapper.toEntity(usuarioRequest);
-        usuario.setPassword(senhaCriptografada);
-        usuario.setSenhaComMascara(senhaOriginal);
+        usuario.setPassword(senhaCriptografada); // Armazena sempre criptografada
+        usuario.setSenhaComMascara(senhaOriginal); // Armazena a senha mascarada
         usuario.setPerfilList(Set.of(perfil));
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         logger.info("Usuário salvo com sucesso: {}", usuarioSalvo.getEmail());
 
+        // Preparando a resposta
         UsuarioPreRegistroResponse response = preRegistroMapper.toResponse(usuarioSalvo);
         response.setSenhaComMascara(usuario.getSenhaComMascara());
         logger.info("Senha com máscara: {}", usuario.getSenhaComMascara());
 
         return response;
+    }
+
+    private String mascararSenha(String senha) {
+        if (senha == null || senha.length() < 4) return senha;
+        return senha.substring(0, 4) + "*".repeat(senha.length() - 4);
     }
 
     @Transactional
@@ -80,44 +91,46 @@ public class UsuarioService {
             usuario.setEmail("admin@example.com");
             usuario.setDataNascimento(LocalDate.parse("2000-01-01"));
             usuario.setCpf("987.654.321-00");
+
             String senhaOriginal = "admin123";
             usuario.setPassword(passwordEncoder.encode(senhaOriginal));
-            usuario.setSenhaComMascara(senhaOriginal);
+            usuario.setSenhaComMascara(mascararSenha(senhaOriginal));
 
             Perfil perfil = perfilRepository.findByNomePerfil("ADMIN");
-            Perfil manegedPerfil = entityManager.merge(perfil);
-
-            usuario.setPerfilList(Collections.singleton(perfilRepository.findByNomePerfil("ADMIN")));
+            usuario.setPerfilList(Collections.singleton(perfil));
             usuarioRepository.save(usuario);
 
-            logger.info("Senha com máscara: {}", usuario.getSenhaComMascara());
+            logger.info("Usuário Admin criado com sucesso.");
         }
     }
 
-    public Usuario validaUsuario(LoginRequest loginRequest) throws RuntimeException {
+    public Usuario validaUsuario(LoginRequest loginRequest) {
+        logger.info("Iniciando validação de login para o email: {}", loginRequest.email());
+
         Usuario usuario = usuarioRepository
                 .findByEmailIgnoreCaseContaining(loginRequest.email())
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Nenhum usuário com este email foi cadastrado: "
-                                + loginRequest.email())
-                );
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Nenhum usuário com este email foi cadastrado: " + loginRequest.email()));
+
+        logger.info("Senha enviada na requisição: {}", loginRequest.password());
+        logger.info("Senha armazenada (criptografada): {}", usuario.getPassword());
 
         if (!passwordEncoder.matches(loginRequest.password(), usuario.getPassword())) {
+            logger.error("Senha errada para este usuário: {}", loginRequest.email());
             throw new EntityNotFoundException("Senha errada para este usuário");
         }
+
+        logger.info("Login bem-sucedido para o email: {}", loginRequest.email());
         return usuario;
     }
 
     public UsuarioResponse busca(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
-        return usuarioMapper.toResponse(
-                usuario.orElseThrow(
-                    ()-> new EntityNotFoundException("Usuário não encontrado com o id: " + id)));
-
+        return usuarioMapper.toResponse(usuario.orElseThrow(
+                () -> new EntityNotFoundException("Usuário não encontrado com o id: " + id)));
     }
 
     public List<UsuarioResponse> lista(Long id, String email) {
-
         List<Usuario> usuarios;
         if (id != null) {
             usuarios = usuarioRepository.findAllById(id);
@@ -126,20 +139,16 @@ public class UsuarioService {
         } else {
             usuarios = usuarioRepository.findAll();
         }
-        return usuarios.stream()
-                .map(usuarioMapper::toResponse)
-                .collect(Collectors.toList());
+        return usuarios.stream().map(usuarioMapper::toResponse).collect(Collectors.toList());
     }
 
     public UsuarioPreRegistroResponse redefine(String email, RedefinicaoSenhaRequest request) {
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
-                ()-> new EntityNotFoundException("Usuário não encontrado com o email: " + email));
+                () -> new EntityNotFoundException("Usuário não encontrado com o email: " + email));
 
         String senhaEncriptografada = passwordEncoder.encode(request.getPassword());
         usuario.setPassword(senhaEncriptografada);
-
-        String senhaComMascara = preRegistroMapper.mascaraSenha(request.getPassword());
-        usuario.setSenhaComMascara(senhaComMascara);
+        usuario.setSenhaComMascara(mascararSenha(request.getPassword()));
 
         Usuario usuarioAtualizado = usuarioRepository.save(usuario);
 
