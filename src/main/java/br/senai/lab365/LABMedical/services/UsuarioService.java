@@ -8,6 +8,7 @@ import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
+import br.senai.lab365.LABMedical.dtos.usuario.*;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.mappers.UsuarioMapper;
@@ -171,5 +172,20 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
         usuarioRepository.deleteById(id);
+    }
+
+  public UsuarioPreRegistroResponse redefine(String email, RedefinicaoSenhaRequest request) {
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                ()-> new EntityNotFoundException("Usuário não encontrado com o email: " + email));
+
+        String senhaEncriptografada = passwordEncoder.encode(request.getPassword());
+        usuario.setPassword(senhaEncriptografada);
+
+        String senhaComMascara = preRegistroMapper.mascaraSenha(request.getPassword());
+        usuario.setSenhaComMascara(senhaComMascara);
+
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+
+        return preRegistroMapper.toResponse(usuarioAtualizado);
     }
 }

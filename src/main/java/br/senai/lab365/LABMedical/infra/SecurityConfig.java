@@ -45,6 +45,9 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/usuarios/perfil/{nomePerfil}")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
+                        .requestMatchers(HttpMethod.PATCH, "/usuarios/email/{email}/redefinir-senha")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/{id}")

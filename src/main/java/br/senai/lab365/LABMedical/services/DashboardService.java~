@@ -22,15 +22,11 @@ public class DashboardService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public DashboardResponse getDashboard(String perfil) {
+    public DashboardResponse getDashboard() {
         long numeroPacientes = pacienteRepository.count();
         long numeroConsultas = consultaRepository.count();
         long numeroExames = exameRepository.count();
         long numeroUsuarios = usuarioRepository.count();
-
-        if ("ADMIN".equals(perfil)) {
-            numeroUsuarios = usuarioRepository.count();
-        }
 
         return new DashboardResponse(numeroPacientes, numeroConsultas, numeroExames, numeroUsuarios);
     }
