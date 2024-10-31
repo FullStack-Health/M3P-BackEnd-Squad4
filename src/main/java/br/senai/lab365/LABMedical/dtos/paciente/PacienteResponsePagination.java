@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class PacienteResponsePagination {
 
-    private List<PacienteGetRequest> conteudo;
+    private List<PacienteGetRequest> pacientes;
     private int totalPaginas;
     private int tamanhoPagina;
     private int paginaAtual;

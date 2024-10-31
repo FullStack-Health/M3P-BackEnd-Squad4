@@ -23,23 +23,40 @@ public class ProntuarioMapper {
         return response;
     }
 
-
-
     public ProntuarioResponse getPacienteToProntuario(
             Paciente paciente,
             List<Exame> exames,
             List<Consulta> consultas
-            ) {
-                ProntuarioResponse response = new ProntuarioResponse();
-                response.setId(paciente.getId());
-                response.setNome(paciente.getNome());
-                response.setConvenio(paciente.getConvenio());
-                response.setContatoEmergencia(paciente.getContatoEmergencia());
-                response.setListaAlergias(paciente.getListaAlergias());
-                response.setListaCuidados(paciente.getListaCuidados());
+    ) {
+        ProntuarioResponse response = new ProntuarioResponse();
+        response.setId(paciente.getId());
+        response.setNome(paciente.getNome());
+        response.setConvenio(paciente.getConvenio());
+        response.setContatoEmergencia(paciente.getContatoEmergencia());
+        response.setListaAlergias(paciente.getListaAlergias());
+        response.setListaCuidados(paciente.getListaCuidados());
 
-                List<ExameResponse> exameResponse = exames.stream()
-                        .map(exame -> new ExameResponse(
+        response.setExames(mapExamesToResponse(exames));
+        response.setConsultas(mapConsultasToResponse(consultas));
+
+        return response;
+    }
+
+    public ProntuarioResponse examesToResponse(List<Exame> exames) {
+        ProntuarioResponse response = new ProntuarioResponse();
+        response.setExames(mapExamesToResponse(exames));
+        return response;
+    }
+
+    public ProntuarioResponse consultasToResponse(List<Consulta> consultas) {
+        ProntuarioResponse response = new ProntuarioResponse();
+        response.setConsultas(mapConsultasToResponse(consultas));
+        return response;
+    }
+
+    private List<ExameResponse> mapExamesToResponse(List<Exame> exames) {
+        return exames.stream()
+                .map(exame -> new ExameResponse(
                                 exame.getId(),
                                 exame.getNomeExame(),
                                 exame.getDataExame(),
@@ -49,27 +66,24 @@ public class ProntuarioMapper {
                                 exame.getUrlDocumento(),
                                 exame.getResultados(),
                                 exame.getPaciente().getId()
-                                )
-                            )
-                        .collect(Collectors.toList());
-                response.setExames(exameResponse);
-
-        List<ConsultaResponse> consultaResponse = consultas.stream()
-                .map(consulta -> new ConsultaResponse(
-                        consulta.getId(),
-                        consulta.getMotivo(),
-                        consulta.getDataConsulta(),
-                        consulta.getHorarioConsulta(),
-                        consulta.getDescricaoProblema(),
-                        consulta.getMedicacaoReceitada(),
-                        consulta.getDosagemPrecaucoes(),
-                        consulta.getPaciente().getId()
                         )
-                    )
+                )
                 .collect(Collectors.toList());
-        response.setConsultas(consultaResponse);
+    }
 
-        return response;
-
+    private List<ConsultaResponse> mapConsultasToResponse(List<Consulta> consultas) {
+        return consultas.stream()
+                .map(consulta -> new ConsultaResponse(
+                                consulta.getId(),
+                                consulta.getMotivo(),
+                                consulta.getDataConsulta(),
+                                consulta.getHorarioConsulta(),
+                                consulta.getDescricaoProblema(),
+                                consulta.getMedicacaoReceitada(),
+                                consulta.getDosagemPrecaucoes(),
+                                consulta.getPaciente().getId()
+                        )
+                )
+                .collect(Collectors.toList());
     }
 }
