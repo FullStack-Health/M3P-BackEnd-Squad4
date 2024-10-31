@@ -1,0 +1,72 @@
+*   [33mc5ef9af[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m Merge pull request #3 from FullStack-Health/main
+[31m|[m[32m\[m  
+[31m|[m *   [33m3ae9a22[m Merge pull request #2 from FullStack-Health/feature/usuarios
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m * [33mea2db1b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/usuarios[m[33m, [m[1;31morigin/feature/usuarios[m[33m)[m criação de /usuarios/pre-registro
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m *   [33m0cc7d68[m[33m ([m[1;31morigin/main[m[33m)[m Merge pull request #1 from FullStack-Health/develop
+[31m|[m [35m|[m[31m\[m  
+[31m|[m [35m|[m[31m/[m  
+[31m|[m[31m/[m[35m|[m   
+* [35m|[m [33macdc44a[m Configuração de CORS
+* [35m|[m [33mb206f48[m application name fix = LabMedical
+* [35m|[m   [33mf98d28e[m Merge da main para a develop
+[1;31m|[m[1;32m\[m [35m\[m  
+[1;31m|[m * [35m|[m [33m6b34d2a[m Ajuste nome da aplicação para VitalCare
+[1;31m|[m [35m|[m[35m/[m  
+[1;31m|[m * [33m0a8cb14[m[33m ([m[1;32mmain[m[33m)[m atualização do nome da aplicação
+[1;31m|[m *   [33m05738d8[m readme
+[1;31m|[m [1;33m|[m[1;34m\[m  
+[1;31m|[m [1;33m|[m * [33m48df3e3[m Create README.md
+[1;31m|[m * [1;34m|[m   [33m1bde7d4[m readme
+[1;31m|[m [1;35m|[m[1;36m\[m [1;34m\[m  
+[1;31m|[m [1;35m|[m * [1;34m|[m [33m472ca4d[m Atualização do README.md
+[1;31m|[m * [1;36m|[m [1;34m|[m [33m2ad44cf[m readme
+[1;31m|[m [1;36m|[m[1;36m/[m [1;34m/[m  
+[1;31m|[m * [1;34m|[m [33m16a84dd[m Readme
+[1;31m|[m * [1;34m|[m [33ma8ceb9a[m Limpeza do código
+[1;31m|[m * [1;34m|[m   [33m24ad0ec[m Merge pull request #7 from andrejsmattos/feat-login
+[1;31m|[m [31m|[m[32m\[m [1;34m\[m  
+[1;31m|[m [31m|[m * [1;34m|[m [33mb6afcd7[m Configurações de autorizações de acesso por scope e ajustes de id_usuario em Paciente
+[1;31m|[m [31m|[m * [1;34m|[m [33m3993c39[m Inicialização dos perfis 'ADMIN', 'PACIENTE' e 'MÉDICO' e do primeiro usuário 'admin' da aplicação
+[1;31m|[m [31m|[m * [1;34m|[m [33m1bf5028[m Criação de Perfis de acesso e criptografia da senha de usuário
+[1;31m|[m [31m|[m[31m/[m [1;34m/[m  
+[1;31m|[m * [1;34m|[m   [33m1ad4e89[m Merge pull request #6 from andrejsmattos/feat-dashboard
+[1;31m|[m [33m|[m[34m\[m [1;34m\[m  
+[1;31m|[m [33m|[m * [1;34m|[m [33me018156[m GET ('/dashboard')
+[1;31m|[m [33m|[m[33m/[m [1;34m/[m  
+[1;31m|[m * [1;34m|[m   [33m1f279bf[m Merge pull request #5 from andrejsmattos/feat-prontuario
+[1;31m|[m [35m|[m[36m\[m [1;34m\[m  
+[1;31m|[m [35m|[m * [1;34m|[m [33mb5c4c07[m GET ('/pacientes/{id}/prontuarios')
+[1;31m|[m [35m|[m * [1;34m|[m [33m0e8c308[m Listagem de Pacientes para prontuário (GET /pacientes/prontuarios)
+[1;31m|[m [35m|[m[35m/[m [1;34m/[m  
+[1;31m|[m * [1;34m|[m   [33m0a5fc77[m Merge pull request #4 from andrejsmattos/feat-exame
+[1;31m|[m [1;31m|[m[1;32m\[m [1;34m\[m  
+[1;31m|[m [1;31m|[m * [1;34m|[m [33ma8951a0[m DELETE ('/exames/{id}')
+[1;31m|[m [1;31m|[m * [1;34m|[m [33m8840fe0[m PUT ('/exames/{id}')
+[1;31m|[m [1;31m|[m * [1;34m|[m [33m9e98c9d[m GET ('/exames/{id}')
+[1;31m|[m [1;31m|[m * [1;34m|[m [33md9b9167[m POST ('/exames')
+[1;31m|[m [1;31m|[m[1;31m/[m [1;34m/[m  
+[1;31m|[m * [1;34m|[m   [33m19e0d4b[m Merge pull request #3 from andrejsmattos/feat-consulta
+[1;31m|[m [1;33m|[m[1;34m\[m [1;34m\[m  
+[1;31m|[m [1;33m|[m * [1;34m|[m [33m4461138[m DELETE('/consultas/{id}'
+[1;31m|[m [1;33m|[m * [1;34m|[m [33ma12f92b[m Atualiza consulta: PUT ('/consultas/{id}')
+[1;31m|[m [1;33m|[m * [1;34m|[m [33mff568e3[m POST ('/consultas')
+[1;31m|[m [1;33m|[m[1;33m/[m [1;34m/[m  
+[1;31m|[m * [1;34m|[m   [33m8efdc4d[m Merge pull request #2 from andrejsmattos/feat-paciente
+[1;31m|[m [1;35m|[m[1;36m\[m [1;34m\[m  
+[1;31m|[m [1;35m|[m * [1;34m|[m [33m4861cac[m Inclusão de @Valid no parâmetro de PUT
+[1;31m|[m [1;35m|[m * [1;34m|[m [33mc944f96[m Cálculo de idade no GET('/pacientes')
+[1;31m|[m [1;35m|[m * [1;34m|[m [33m46aa91d[m Implementação de GET com filtros e paginação
+[1;31m|[m [1;35m|[m * [1;34m|[m [33m2abd1ed[m Implementação de GET {'/id'} e tratamento de exceções
+[1;31m|[m [1;35m|[m * [1;34m|[m [33ma20943d[m Validações e tratamento de exceções
+[1;31m|[m * [1;36m|[m [1;34m|[m [33mbf86683[m Merge pull request #1 from andrejsmattos/feat-paciente
+[1;31m|[m [1;34m|[m[1;36m\[m[1;36m|[m [1;34m|[m 
+[1;31m|[m [1;34m|[m [1;36m|[m[1;34m/[m  
+[1;31m|[m [1;34m|[m[1;34m/[m[1;36m|[m   
+[1;31m|[m [1;34m|[m * [33m6fda8ef[m Criação de Paciente, Endereco e implementação de cadastro de paciente
+[1;31m|[m [1;34m|[m * [33mf859c43[m Criação de Paciente, Endereco e implementação de cadastro de paciente
+[1;31m|[m [1;34m|[m[1;34m/[m  
+[1;31m|[m * [33m7543091[m primeiro commit
+* [33me4f4ecb[m[33m ([m[1;32mfeature/web-config[m[33m)[m Initial commit
