@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/consultas")
 public class ConsultaController {
@@ -43,4 +45,10 @@ public class ConsultaController {
         service.remove(id);
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConsultaResponse> mostraLista() {
+        return service.mostraLista();
+
+    }
 }

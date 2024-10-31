@@ -10,7 +10,9 @@ import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsultaService {
@@ -65,5 +67,11 @@ public class ConsultaService {
             throw new EntityNotFoundException("Consulta não encontrada com o id: " + id);
         }
         consultaRepository.deleteById(id);
+    }
+
+    public List<ConsultaResponse> mostraLista() {
+        return consultaRepository.findAll().stream().map(
+                mapper::toResponse
+        ).collect(Collectors.toList());
     }
 }
