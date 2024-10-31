@@ -23,8 +23,6 @@ public class ProntuarioMapper {
         return response;
     }
 
-
-
     public ProntuarioResponse getPacienteToProntuario(
             Paciente paciente,
             List<Exame> exames,
@@ -38,23 +36,39 @@ public class ProntuarioMapper {
                 response.setListaAlergias(paciente.getListaAlergias());
                 response.setListaCuidados(paciente.getListaCuidados());
 
-                List<ExameResponse> exameResponse = exames.stream()
-                        .map(exame -> new ExameResponse(
-                                exame.getId(),
-                                exame.getNomeExame(),
-                                exame.getDataExame(),
-                                exame.getHorarioExame(),
-                                exame.getTipoExame(),
-                                exame.getLaboratorio(),
-                                exame.getUrlDocumento(),
-                                exame.getResultados(),
-                                exame.getPaciente().getId()
-                                )
-                            )
-                        .collect(Collectors.toList());
-                response.setExames(exameResponse);
+                response.setExames(mapExamesToResponse(exames));
+                response.setConsultas(mapConsultasToResponse(consultas));
 
-        List<ConsultaResponse> consultaResponse = consultas.stream()
+        return response;
+    }
+
+    public List<ExameResponse> examesToResponse(List<Exame> exames) {
+        return mapExamesToResponse(exames);
+    }
+
+    public List<ConsultaResponse> consultasToResponse(List<Consulta> consultas) {
+        return mapConsultasToResponse(consultas);
+    }
+
+    private List<ExameResponse> mapExamesToResponse(List<Exame> exames) {
+        return exames.stream()
+                .map(exame -> new ExameResponse(
+                        exame.getId(),
+                        exame.getNomeExame(),
+                        exame.getDataExame(),
+                        exame.getHorarioExame(),
+                        exame.getTipoExame(),
+                        exame.getLaboratorio(),
+                        exame.getUrlDocumento(),
+                        exame.getResultados(),
+                        exame.getPaciente().getId()
+                        )
+                    )
+                .collect(Collectors.toList());
+    }
+
+    private List<ConsultaResponse> mapConsultasToResponse(List<Consulta> consultas) {
+        return consultas.stream()
                 .map(consulta -> new ConsultaResponse(
                         consulta.getId(),
                         consulta.getMotivo(),
@@ -67,11 +81,5 @@ public class ProntuarioMapper {
                         )
                     )
                 .collect(Collectors.toList());
-        response.setConsultas(consultaResponse);
-
-        return response;
-
     }
-
-
 }

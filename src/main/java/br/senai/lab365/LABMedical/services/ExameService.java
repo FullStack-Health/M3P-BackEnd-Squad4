@@ -8,9 +8,13 @@ import br.senai.lab365.LABMedical.mappers.ExameMapper;
 import br.senai.lab365.LABMedical.repositories.ExameRepository;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ExameService {
@@ -46,7 +50,6 @@ public class ExameService {
                         ()-> new EntityNotFoundException("Exame não encontrado com o id: " + id)));
     }
 
-
     public ExameResponse atualiza(Long id, ExameRequest request) {
         if (request.getIdPaciente() == null) {
             throw new IllegalArgumentException("O id do paciente não pode ser nulo.");
@@ -72,5 +75,12 @@ public class ExameService {
         }
 
         exameRepository.deleteById(id);
+    }
+
+    public List<ExameResponse> lista(Pageable pageable) {
+        Page<Exame> exames = exameRepository.findAll(pageable);
+        return exames.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
     }
 }
