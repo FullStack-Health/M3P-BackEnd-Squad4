@@ -1,5 +1,7 @@
 package br.senai.lab365.LABMedical.services;
 
+import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
+import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.PacienteSummaryRequest;
 import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
@@ -34,6 +36,11 @@ public class ProntuarioService {
         this.mapper = mapper;
     }
 
+    private Paciente findPacienteById(Long idPaciente) {
+        return pacienteRepository.findById(idPaciente).orElseThrow(
+                () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
+        );
+    }
 
     public SummaryResponsePagination lista(Long idPaciente, String nome, int numeroPagina, int tamanhoPagina) {
         Pageable paginacao = PageRequest.of(numeroPagina, tamanhoPagina);
@@ -48,9 +55,7 @@ public class ProntuarioService {
         }
 
         if (idPaciente != null) {
-            Paciente paciente = pacienteRepository.findById(idPaciente).orElseThrow(
-                    () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
-            );
+            findPacienteById(idPaciente);
         }
 
         List<PacienteSummaryRequest> conteudo =  paginaPacientes.getContent().stream()
@@ -73,15 +78,27 @@ public class ProntuarioService {
     }
 
     public ProntuarioResponse busca(Long idPaciente) {
-        Paciente paciente = pacienteRepository.findById(idPaciente).orElseThrow(
-                () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
-        );
+        Paciente paciente = findPacienteById(idPaciente);
 
         List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
         List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
 
-           return mapper.getPacienteToProntuario(paciente, exames, consultas);
+        return mapper.getPacienteToProntuario(paciente, exames, consultas);
     }
 
+    public List<ExameResponse> listaTodosExamesPaciente(Long idPaciente) {
+        findPacienteById(idPaciente);
 
+        List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
+
+        return mapper.examesToResponse(exames);
+    }
+
+    public List<ConsultaResponse> listaTodasConsultasPaciente(Long idPaciente) {
+        findPacienteById(idPaciente);
+
+        List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
+
+        return mapper.consultasToResponse(consultas);
+    }
 }
