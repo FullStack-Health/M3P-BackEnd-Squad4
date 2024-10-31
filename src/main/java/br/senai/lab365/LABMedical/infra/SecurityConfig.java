@@ -107,6 +107,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/pacientes/{id}/prontuarios")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
+                        .requestMatchers(HttpMethod.GET, "/pacientes/{id}/exames")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
+                        .requestMatchers(HttpMethod.GET, "/pacientes/{id}/consultas")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
                         .requestMatchers(HttpMethod.GET, "/dashboard")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
