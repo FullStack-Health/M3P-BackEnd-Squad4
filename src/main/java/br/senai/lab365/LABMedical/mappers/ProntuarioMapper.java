@@ -72,6 +72,4 @@ public class ProntuarioMapper {
         return response;
 
     }
-
-
 }
