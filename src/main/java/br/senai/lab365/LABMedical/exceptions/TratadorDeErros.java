@@ -12,25 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.DataFormatException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<ErroResponse> trataChaveDuplicada(DuplicateKeyException exception) {
-        ErroResponse response = new ErroResponse();
-
-        if (exception.getMostSpecificCause().getMessage().contains("CPF")) {
-            response.setCampo("CPF");
-        } else if (exception.getMostSpecificCause().getMessage().contains("email")) {
-            response.setCampo("email");
-        }
-
-        response.setMensagem(exception.getLocalizedMessage());
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> trataParametroInvalido(MethodArgumentNotValidException exception) {
@@ -40,6 +24,12 @@ public class TratadorDeErros {
             String message = error.getDefaultMessage();
             errors.put(fieldName, message);
         });
+
+        // Se houver um erro específico relacionado ao CPF, retornar 409 Conflict
+        if (errors.containsKey("cpf") && errors.get("cpf").equals("CPF já cadastrado")) {
+            return new ResponseEntity<>(errors, HttpStatus.CONFLICT);
+        }
+
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
@@ -48,12 +38,9 @@ public class TratadorDeErros {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler(DataFormatException.class)
-//    public ResponseEntity<ErroResponse> trataErroDeFormatoDeData(DataFormatException exception) {
-//        ErroResponse response = new ErroResponse();
-//        response.setCampo("dataConsulta");
-//        response.setMensagem(exception.getMessage());
-//
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(CpfDuplicadoException.class)
+    public ResponseEntity<String> trataCpfDuplicado(CpfDuplicadoException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
 }

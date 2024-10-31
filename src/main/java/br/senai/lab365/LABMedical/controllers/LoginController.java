@@ -6,7 +6,9 @@ import br.senai.lab365.LABMedical.dtos.usuario.RedefinicaoSenhaRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
 import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import br.senai.lab365.LABMedical.services.UsuarioService;
+import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,12 +31,14 @@ public class LoginController {
     private final JwtEncoder jwtEncoder;
     private final UsuarioService usuarioService;
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final PacienteRepository pacienteRepository;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public LoginResponse geraToken(@RequestBody LoginRequest loginRequest) {
         logger.info("Recebendo requisição de login para o email: {}", loginRequest.email());
 
+        //Validação do usuário e credenciais
         Usuario usuario = usuarioService.validaUsuario(loginRequest);
         if (usuario == null) {
             logger.error("Falha ao autenticar o usuário: {}", loginRequest.email());
@@ -42,28 +46,41 @@ public class LoginController {
         }
 
         Instant agora = Instant.now();
+
+        //Obtém os escopos associados ao usuário
         String scope = usuario.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
-        long TEMPO_EXPIRACAO = 36000L;
+        // Adicionado: Busca o ID do paciente associado ao usuário
+        String patientId = "";
+        if (scope.contains("PACIENTE")) {
+            patientId = pacienteRepository.findByUsuario(usuario)
+                    .map(paciente -> paciente.getId().toString())
+                    .orElseThrow(() -> new RuntimeException("Paciente não encontrado para este usuário."));
+        }
+
+        // Criação do JWT com os claims personalizados
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(agora)
-                .expiresAt(agora.plusSeconds(TEMPO_EXPIRACAO))
+                .expiresAt(agora.plusSeconds(3600))
                 .subject(usuario.getEmail())
                 .claim("scope", scope)
+                .claim("patientId", patientId) // Adicionado: Inclui ID do paciente no token
                 .build();
 
-        var valorJwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        // Codifica e retorna o JWT
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         logger.info("Usuário autenticado com sucesso: {}", loginRequest.email());
+
 
         List<String> listaNomesPerfis = usuario.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new LoginResponse(valorJwt, TEMPO_EXPIRACAO, listaNomesPerfis);
+        return new LoginResponse(token, 3600L, listaNomesPerfis);
     }
 
     @PostMapping("/usuarios/pre-registro")

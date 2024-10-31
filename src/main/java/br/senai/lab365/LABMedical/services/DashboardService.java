@@ -26,9 +26,9 @@ public class DashboardService {
         long numeroPacientes = pacienteRepository.count();
         long numeroConsultas = consultaRepository.count();
         long numeroExames = exameRepository.count();
-        long numeroUsuarios = usuarioRepository.count();
+        Long numeroUsuarios = null;
 
-        if ("ADMIN".equals(perfil)) {
+        if ("SCOPE_ADMIN".equalsIgnoreCase(perfil)) {
             numeroUsuarios = usuarioRepository.count();
         }
 

@@ -4,12 +4,16 @@ import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
-import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Paciente;
+import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.exceptions.CpfDuplicadoException;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
+import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,34 +24,37 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Service
 public class PacienteService {
 
-    private final PacienteRepository pacienteRepository;
-    private final PacienteMapper mapper;
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
-    public PacienteService(PacienteRepository pacienteRepository, PacienteMapper mapper) {
-        this.pacienteRepository = pacienteRepository;
-        this.mapper = mapper;
-    }
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PacienteMapper pacienteMapper;
 
     public PacienteResponse cadastra(@Valid PacienteRequest pacienteRequest) {
         // Verificar se o CPF já existe
         if (pacienteRepository.existsByCpf(pacienteRequest.getCpf())) {
-            throw new DuplicateKeyException("CPF já cadastrado com este número: " + pacienteRequest.getCpf());
+            throw new CpfDuplicadoException("CPF já cadastrado com este número: " + pacienteRequest.getCpf());
         }
         // Converter o DTO PacienteRequest para a entidade Paciente
-        Paciente paciente = mapper.toEntity(pacienteRequest);
+        Paciente paciente = pacienteMapper.toEntity(pacienteRequest);
+        // Salvar a entidade Usuario antes de salvar o Paciente
+        usuarioRepository.save(paciente.getUsuario());
         // Salvar a entidade Paciente
         Paciente pacienteSalvo = pacienteRepository.save(paciente);
+
         // Converter a entidade Paciente salva para o DTO PacienteResponse
-        return mapper.toResponse(pacienteSalvo);
+        return pacienteMapper.toResponse(pacienteSalvo);
     }
 
     public PacienteResponse busca(Long id) {
         Optional<Paciente> paciente = pacienteRepository.findById(id);
-        return mapper.toResponse(
+        return pacienteMapper.toResponse(
                 paciente.orElseThrow(
                         ()-> new EntityNotFoundException("Paciente não encontrado com o id: " + id)));
 
@@ -59,18 +66,26 @@ public class PacienteService {
                         () -> new EntityNotFoundException("Paciente não encontrado com o id: " + id)
                 );
 
-        mapper.atualizaPacienteDesdeRequest(paciente, request);
+        pacienteMapper.atualizaPacienteDesdeRequest(paciente, request);
 
         paciente = pacienteRepository.save(paciente);
-        return mapper.toResponse(paciente);
+        return pacienteMapper.toResponse(paciente);
     }
 
+    @Transactional
     public void remove(Long id) {
-        if (!pacienteRepository.existsById(id)) {
-            throw new EntityNotFoundException("Paciente não encontrado com o id: " + id);
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado"));
+
+        // 1. Remover associações de perfil antes da exclusão
+        Usuario usuario = paciente.getUsuario();
+        if (usuario != null) {
+            usuario.getPerfilList().clear(); // Remove perfis associados ao usuário
+            usuarioRepository.save(usuario); // Atualiza o usuário sem perfis
         }
 
-        pacienteRepository.deleteById(id);
+        // 2. Excluir o paciente
+        pacienteRepository.delete(paciente);
     }
 
 
@@ -91,7 +106,7 @@ public class PacienteService {
         }
 
         List<PacienteGetRequest> conteudo =  paginaPacientes.getContent().stream()
-                .map(mapper::getRequestToResponse)
+                .map(pacienteMapper::getRequestToResponse)
                 .collect(Collectors.toList());
 
         if(conteudo.isEmpty()){
@@ -109,5 +124,13 @@ public class PacienteService {
         return response;
     }
 
+    public Paciente createPaciente(PacienteRequest request) {
+        Paciente paciente = pacienteMapper.toEntity(request);
+        usuarioRepository.save(paciente.getUsuario()); // Salva o usuário primeiro
+        return pacienteRepository.save(paciente); // Salva o paciente
+    }
 
+    public boolean existePaciente(Long id) {
+        return pacienteRepository.existsById(id);
+    }
 }
