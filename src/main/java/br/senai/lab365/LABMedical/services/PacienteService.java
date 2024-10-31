@@ -105,16 +105,16 @@ public class PacienteService {
             paginaPacientes = pacienteRepository.findAll(paginacao);
         }
 
-        List<PacienteGetRequest> conteudo =  paginaPacientes.getContent().stream()
+        List<PacienteGetRequest> pacientes =  paginaPacientes.getContent().stream()
                 .map(pacienteMapper::getRequestToResponse)
                 .collect(Collectors.toList());
 
-        if(conteudo.isEmpty()){
+        if(pacientes.isEmpty()){
             throw new EntityNotFoundException("Nenhum paciente encontrado");
         }
 
         PacienteResponsePagination response = new PacienteResponsePagination();
-        response.setConteudo(conteudo);
+        response.setPacientes(pacientes);
         response.setTotalPaginas(paginaPacientes.getTotalPages());
         response.setTamanhoPagina(tamanhoPagina);
         response.setPaginaAtual(numeroPagina);
