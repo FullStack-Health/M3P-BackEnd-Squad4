@@ -1,7 +1,5 @@
 package br.senai.lab365.LABMedical.services;
 
-import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
-import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.PacienteSummaryRequest;
 import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
@@ -86,7 +84,7 @@ public class ProntuarioService {
         return mapper.getPacienteToProntuario(paciente, exames, consultas);
     }
 
-    public List<ExameResponse> listaTodosExamesPaciente(Long idPaciente) {
+    public ProntuarioResponse listaTodosExamesPaciente(Long idPaciente) {
         findPacienteById(idPaciente);
 
         List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
@@ -94,7 +92,7 @@ public class ProntuarioService {
         return mapper.examesToResponse(exames);
     }
 
-    public List<ConsultaResponse> listaTodasConsultasPaciente(Long idPaciente) {
+    public ProntuarioResponse listaTodasConsultasPaciente(Long idPaciente) {
         findPacienteById(idPaciente);
 
         List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);

@@ -159,6 +159,7 @@ public class PacienteMapper {
 
     public PacienteGetRequest getRequestToResponse(Paciente paciente) {
         PacienteGetRequest response = new PacienteGetRequest();
+        response.setId(paciente.getId());
         response.setNome(paciente.getNome());
         response.setTelefone(paciente.getTelefone());
         response.setEmail(paciente.getEmail());
