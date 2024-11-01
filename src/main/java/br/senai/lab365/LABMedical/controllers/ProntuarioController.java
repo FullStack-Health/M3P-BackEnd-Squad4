@@ -1,5 +1,7 @@
 package br.senai.lab365.LABMedical.controllers;
 
+import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
+import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
 import br.senai.lab365.LABMedical.services.ProntuarioService;
@@ -7,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/pacientes")
@@ -44,18 +48,18 @@ public class ProntuarioController {
 
     @GetMapping("/{idPaciente}/exames")
     @ResponseStatus(HttpStatus.OK)
-    public ProntuarioResponse listaTodosExamesPaciente(@PathVariable Long idPaciente) {
+    public List<ExameResponse> listaTodosExamesPaciente(@PathVariable Long idPaciente) {
         logger.info("GET /pacientes/{}/exames - Iniciando a listagem de exames do paciente com id: {}", idPaciente, idPaciente);
-        ProntuarioResponse response = service.listaTodosExamesPaciente(idPaciente);
+        List<ExameResponse> response = service.listaTodosExamesPaciente(idPaciente);
         logger.info("GET /pacientes/{}/exames - Listagem de exames concluída com sucesso", idPaciente);
         return response;
     }
 
     @GetMapping("/{idPaciente}/consultas")
     @ResponseStatus(HttpStatus.OK)
-    public ProntuarioResponse listaTodasConsultasPaciente(@PathVariable Long idPaciente) {
+    public List<ConsultaResponse> listaTodasConsultasPaciente(@PathVariable Long idPaciente) {
         logger.info("GET /pacientes/{}/consultas - Iniciando a listagem de consultas do paciente com id: {}", idPaciente, idPaciente);
-        ProntuarioResponse response = service.listaTodasConsultasPaciente(idPaciente);
+        List<ConsultaResponse> response = service.listaTodasConsultasPaciente(idPaciente);
         logger.info("GET /pacientes/{}/consultas - Listagem de consultas concluída com sucesso", idPaciente);
         return response;
     }

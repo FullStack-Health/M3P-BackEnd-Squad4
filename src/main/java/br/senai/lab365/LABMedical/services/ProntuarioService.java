@@ -1,5 +1,7 @@
 package br.senai.lab365.LABMedical.services;
 
+import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
+import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.PacienteSummaryRequest;
 import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
@@ -55,21 +57,17 @@ public class ProntuarioService {
         List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
         List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
 
-        ProntuarioResponse response = mapper.getPacienteToProntuario(paciente);
-        response.setExames(mapper.examesToResponse(exames));
-        response.setConsultas(mapper.consultasToResponse(consultas));
-
-        return response;
+        return mapper.getPacienteToProntuario(paciente, exames, consultas);
     }
 
-    public ProntuarioResponse listaTodosExamesPaciente(Long idPaciente) {
+    public List<ExameResponse> listaTodosExamesPaciente(Long idPaciente) {
         findPacienteById(idPaciente);
         List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
 
         return mapper.examesToResponse(exames);
     }
 
-    public ProntuarioResponse listaTodasConsultasPaciente(Long idPaciente) {
+    public List<ConsultaResponse> listaTodasConsultasPaciente(Long idPaciente) {
         findPacienteById(idPaciente);
         List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
 
@@ -103,5 +101,4 @@ public class ProntuarioService {
             throw new EntityNotFoundException("Nenhum paciente encontrado");
         }
     }
-
 }
