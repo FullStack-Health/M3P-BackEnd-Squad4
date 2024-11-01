@@ -89,40 +89,42 @@ public class PacienteService {
     }
 
 
-    public PacienteResponsePagination lista(String nome, String telefone, String email, int numeroPagina, int tamanhoPagina) {
-        Pageable paginacao = PageRequest.of(numeroPagina, tamanhoPagina);
-        Page<Paciente> paginaPacientes;
+   public PacienteResponsePagination lista(Long id, String nome, String telefone, String email, int numeroPagina, int tamanhoPagina) {
+    Pageable paginacao = PageRequest.of(numeroPagina, tamanhoPagina);
+    Page<Paciente> paginaPacientes;
 
-        if (nome != null && telefone != null && email != null) {
-            paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContainingAndTelefoneContainingAndEmailContaining(nome, telefone, email, paginacao);
-        } else if (nome != null) {
-            paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContaining(nome, paginacao);
-        } else if (telefone != null) {
-            paginaPacientes = pacienteRepository.findByTelefoneContaining(telefone, paginacao);
-        } else if (email != null) {
-            paginaPacientes = pacienteRepository.findByEmailContaining(email, paginacao);
-        } else {
-            paginaPacientes = pacienteRepository.findAll(paginacao);
-        }
-
-        List<PacienteGetRequest> pacientes =  paginaPacientes.getContent().stream()
-                .map(pacienteMapper::getRequestToResponse)
-                .collect(Collectors.toList());
-
-        if(pacientes.isEmpty()){
-            throw new EntityNotFoundException("Nenhum paciente encontrado");
-        }
-
-        PacienteResponsePagination response = new PacienteResponsePagination();
-        response.setPacientes(pacientes);
-        response.setTotalPaginas(paginaPacientes.getTotalPages());
-        response.setTamanhoPagina(tamanhoPagina);
-        response.setPaginaAtual(numeroPagina);
-        response.setTotalElementos((int) paginaPacientes.getTotalElements());
-        response.setUltima(paginaPacientes.isLast());
-
-        return response;
+    if (id != null) {
+        paginaPacientes = pacienteRepository.findById(id, paginacao);
+    } else if (nome != null && telefone != null && email != null) {
+        paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContainingAndTelefoneContainingAndEmailContaining(nome, telefone, email, paginacao);
+    } else if (nome != null) {
+        paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContaining(nome, paginacao);
+    } else if (telefone != null) {
+        paginaPacientes = pacienteRepository.findByTelefoneContaining(telefone, paginacao);
+    } else if (email != null) {
+        paginaPacientes = pacienteRepository.findByEmailContaining(email, paginacao);
+    } else {
+        paginaPacientes = pacienteRepository.findAll(paginacao);
     }
+
+    List<PacienteGetRequest> pacientes = paginaPacientes.getContent().stream()
+            .map(pacienteMapper::getRequestToResponse)
+            .collect(Collectors.toList());
+
+    if (pacientes.isEmpty()) {
+        throw new EntityNotFoundException("Nenhum paciente encontrado");
+    }
+
+    PacienteResponsePagination response = new PacienteResponsePagination();
+    response.setPacientes(pacientes);
+    response.setTotalPaginas(paginaPacientes.getTotalPages());
+    response.setTamanhoPagina(tamanhoPagina);
+    response.setPaginaAtual(numeroPagina);
+    response.setTotalElementos((int) paginaPacientes.getTotalElements());
+    response.setUltima(paginaPacientes.isLast());
+
+    return response;
+}
 
     public Paciente createPaciente(PacienteRequest request) {
         Paciente paciente = pacienteMapper.toEntity(request);
