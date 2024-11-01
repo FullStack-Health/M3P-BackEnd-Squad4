@@ -56,5 +56,10 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
      */
     Optional<Paciente> findById(Long id);
 
+    /**
+     * Encontra um paciente pelo ID com paginação.
+     */
+    Page<Paciente> findById(Long id, Pageable paginacao);
+
     Optional <Paciente> findByUsuario(Usuario usuario);
 }

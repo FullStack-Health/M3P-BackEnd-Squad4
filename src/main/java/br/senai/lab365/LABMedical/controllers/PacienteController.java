@@ -157,6 +157,7 @@ public class PacienteController {
     // 5. Listar Pacientes com Filtros e Paginação
     @GetMapping
     public ResponseEntity<?> lista(
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String telefone,
             @RequestParam(required = false) String email,
@@ -165,7 +166,7 @@ public class PacienteController {
 
         try {
             // Retorna a lista paginada de pacientes com filtros, se aplicáveis.
-            PacienteResponsePagination pacientes = service.lista(nome, telefone, email, numeroPagina, tamanhoPagina);
+            PacienteResponsePagination pacientes = service.lista(id, nome, telefone, email, numeroPagina, tamanhoPagina);
             logger.info("Lista de pacientes recuperada com sucesso.");
             return ResponseEntity.ok(pacientes); // Código 200
 
