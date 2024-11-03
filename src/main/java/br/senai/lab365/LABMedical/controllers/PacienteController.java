@@ -65,6 +65,7 @@ public class PacienteController {
     // 2. Obter Paciente por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> busca(@PathVariable Long id) {
+        logger.info("GET /pacientes/{} - Iniciando busca dp paciente com ID {}", id, id);
         try {
             // Verificação se o paciente existe.
             if (!service.existePaciente(id)) {
@@ -76,6 +77,7 @@ public class PacienteController {
             // Retorno do paciente encontrado.
             PacienteResponse paciente = service.busca(id);
             logger.info("Paciente com ID {} encontrado.", id);
+            logger.info("Requisição para buscar paciente com ID {} concluída com sucesso.", id);
             return ResponseEntity.ok(paciente); // Código 200: OK
 
         } catch (AccessDeniedException | AuthenticationException e) {

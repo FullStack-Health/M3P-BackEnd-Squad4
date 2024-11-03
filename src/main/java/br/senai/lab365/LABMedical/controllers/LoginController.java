@@ -64,7 +64,7 @@ public class LoginController {
         // Criação do JWT com os claims personalizados
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(agora)
-                .expiresAt(agora.plusSeconds(3600))
+                .expiresAt(agora.plusSeconds(86400))
                 .subject(usuario.getEmail())
                 .claim("scope", scope)
                 .claim("patientId", patientId) // Adicionado: Inclui ID do paciente no token
@@ -80,7 +80,7 @@ public class LoginController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new LoginResponse(token, 3600L, listaNomesPerfis);
+        return new LoginResponse(token, 86400L, listaNomesPerfis);
     }
 
     @PostMapping("/usuarios/pre-registro")
