@@ -54,9 +54,9 @@ public class LoginController {
                 .collect(Collectors.joining(" "));
 
         // Adicionado: Busca o ID do paciente associado ao usuário
-        String patientId = "";
+        String pacienteId = "";
         if (scope.contains("PACIENTE")) {
-            patientId = pacienteRepository.findByUsuario(usuario)
+            pacienteId = pacienteRepository.findByUsuario(usuario)
                     .map(paciente -> paciente.getId().toString())
                     .orElseThrow(() -> new RuntimeException("Paciente não encontrado para este usuário."));
         }
@@ -67,7 +67,7 @@ public class LoginController {
                 .expiresAt(agora.plusSeconds(86400))
                 .subject(usuario.getEmail())
                 .claim("scope", scope)
-                .claim("patientId", patientId) // Adicionado: Inclui ID do paciente no token
+                .claim("pacienteId", pacienteId) // Adicionado: Inclui ID do paciente no token
                 .build();
 
         // Codifica e retorna o JWT
