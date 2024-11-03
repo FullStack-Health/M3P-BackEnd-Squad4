@@ -80,7 +80,7 @@ public class LoginController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new LoginResponse(token, 86400L, listaNomesPerfis);
+        return new LoginResponse(token, 86400L, listaNomesPerfis, pacienteId);
     }
 
     @PostMapping("/usuarios/pre-registro")
