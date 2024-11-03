@@ -2,5 +2,5 @@ package br.senai.lab365.LABMedical.dtos.login;
 
 import java.util.List;
 
-public record LoginResponse(String token, Long tempoExpiracao, List<String> listaNomesPerfis) {
+public record LoginResponse(String token, Long tempoExpiracao, List<String> listaNomesPerfis, String userId) {
 }
