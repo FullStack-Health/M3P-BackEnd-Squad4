@@ -25,6 +25,7 @@ public class Prontuario {
     private String contatoEmergencia;
     private String listaAlergias;
     private String listaCuidados;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_prontuario")
     private List<Exame> exames;
@@ -32,5 +33,9 @@ public class Prontuario {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_prontuario")
     private List<Consulta> consultas;
+
+    @ManyToOne // Adiciona a associação com a entidade Paciente
+    @JoinColumn(name = "id_paciente")
+    private Paciente paciente;
 
 }

@@ -14,6 +14,8 @@ public class ProntuarioResponse {
 
     private Long id;
     private String nome;
+    private String cpf;
+    private String dataNascimento;
     private String convenio;
     private String contatoEmergencia;
     private String listaAlergias;

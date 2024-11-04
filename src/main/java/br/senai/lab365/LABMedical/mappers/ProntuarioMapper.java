@@ -11,6 +11,7 @@ import br.senai.lab365.LABMedical.entities.Paciente;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,9 @@ public class ProntuarioMapper {
         response.setId(paciente.getId());
         response.setNome(paciente.getNome());
         response.setConvenio(paciente.getConvenio());
+        response.setCpf(paciente.getCpf());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        response.setDataNascimento(paciente.getDataNascimento().format(formatter));
         response.setContatoEmergencia(paciente.getContatoEmergencia());
         response.setListaAlergias(paciente.getListaAlergias());
         response.setListaCuidados(paciente.getListaCuidados());
