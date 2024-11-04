@@ -8,6 +8,7 @@ import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.exceptions.CpfDuplicadoException;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
+import br.senai.lab365.LABMedical.repositories.EnderecoRepository;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,6 +35,9 @@ public class PacienteService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private EnderecoRepository enderecoRepository;
+
+    @Autowired
     private PacienteMapper pacienteMapper;
 
     public PacienteResponse cadastra(@Valid PacienteRequest pacienteRequest) {
@@ -45,8 +49,11 @@ public class PacienteService {
         Paciente paciente = pacienteMapper.toEntity(pacienteRequest);
         // Salvar a entidade Usuario antes de salvar o Paciente
         usuarioRepository.save(paciente.getUsuario());
+        //endereco
+        enderecoRepository.save(paciente.getEndereco());
         // Salvar a entidade Paciente
         Paciente pacienteSalvo = pacienteRepository.save(paciente);
+
 
         // Converter a entidade Paciente salva para o DTO PacienteResponse
         return pacienteMapper.toResponse(pacienteSalvo);
@@ -54,6 +61,7 @@ public class PacienteService {
 
     public PacienteResponse busca(Long id) {
         Optional<Paciente> paciente = pacienteRepository.findById(id);
+
         return pacienteMapper.toResponse(
                 paciente.orElseThrow(
                         ()-> new EntityNotFoundException("Paciente não encontrado com o id: " + id)));
