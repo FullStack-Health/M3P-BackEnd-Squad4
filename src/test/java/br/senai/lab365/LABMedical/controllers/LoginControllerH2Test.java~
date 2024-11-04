@@ -1,0 +1,57 @@
+package br.senai.lab365.LABMedical.controllers;
+
+import br.senai.lab365.LABMedical.dtos.login.LoginRequest;
+import br.senai.lab365.LABMedical.dtos.login.LoginResponse;
+import br.senai.lab365.LABMedical.entities.Usuario;
+import br.senai.lab365.LABMedical.repositories.UsuarioRepository;
+import br.senai.lab365.LABMedical.services.UsuarioService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.ActiveProfiles;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+@WebMvcTest(LoginController.class)
+@ActiveProfiles("test")  // Use o perfil de testes para carregar application-test.properties
+@AutoConfigureMockMvc
+public class LoginControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @BeforeEach
+    public void setUp() {
+        // Criar e salvar um usuário para o teste
+        Usuario usuario = new Usuario();
+        usuario.setEmail("teste@exemplo.com");
+        usuario.setNome("Teste Exemplo");
+        usuario.setPassword("senha123"); // Certifique-se de que a senha está de acordo com seu método de autenticação
+        usuarioRepository.save(usuario);
+    }
+
+    @Test
+    public void testGeraToken() throws Exception {
+        // Criar um objeto de requisição de login
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("teste@exemplo.com");
+        loginRequest.setPassword("senha123"); // A senha que foi configurada
+
+        // Realizar uma chamada POST para o endpoint de login
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andExpect(status().isOk()) // Verifica se a resposta é 200 OK
+                .andExpect(jsonPath("$.token").exists()); // Verifica se o token está presente na resposta
+    }
+}
