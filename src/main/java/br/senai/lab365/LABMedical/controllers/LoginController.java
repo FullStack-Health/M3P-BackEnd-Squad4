@@ -8,7 +8,9 @@ import br.senai.lab365.LABMedical.dtos.usuario.UsuarioPreRegistroResponse;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
 import br.senai.lab365.LABMedical.services.UsuarioService;
-import com.nimbusds.jwt.JWTClaimsSet;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -35,10 +37,16 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Gera um token JWT para autenticação")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token gerado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    })
     public LoginResponse geraToken(@RequestBody LoginRequest loginRequest) {
         logger.info("Recebendo requisição de login para o email: {}", loginRequest.email());
 
-        //Validação do usuário e credenciais
+        // Validação do usuário e credenciais
         Usuario usuario = usuarioService.validaUsuario(loginRequest);
         if (usuario == null) {
             logger.error("Falha ao autenticar o usuário: {}", loginRequest.email());
@@ -47,13 +55,13 @@ public class LoginController {
 
         Instant agora = Instant.now();
 
-        //Obtém os escopos associados ao usuário
+        // Obtém os escopos associados ao usuário
         String scope = usuario.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
-        // Adicionado: Busca o ID do paciente associado ao usuário
+        // Busca o ID do paciente associado ao usuário
         String pacienteId = "";
         if (scope.contains("PACIENTE")) {
             pacienteId = pacienteRepository.findByUsuario(usuario)
@@ -67,13 +75,12 @@ public class LoginController {
                 .expiresAt(agora.plusSeconds(86400))
                 .subject(usuario.getEmail())
                 .claim("scope", scope)
-                .claim("pacienteId", pacienteId) // Adicionado: Inclui ID do paciente no token
+                .claim("pacienteId", pacienteId) // Inclui ID do paciente no token
                 .build();
 
         // Codifica e retorna o JWT
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         logger.info("Usuário autenticado com sucesso: {}", loginRequest.email());
-
 
         List<String> listaNomesPerfis = usuario.getAuthorities()
                 .stream()
@@ -85,6 +92,12 @@ public class LoginController {
 
     @PostMapping("/usuarios/pre-registro")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Cadastra um novo usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Usuário cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "409", description = "Dados duplicados encontrados")
+    })
     public UsuarioPreRegistroResponse cadastra(@Valid @RequestBody UsuarioPreRegistroRequest usuarioRequest) {
         logger.info("POST /usuarios/pre-registro - Iniciando o cadastro de: {}", usuarioRequest.getEmail());
         UsuarioPreRegistroResponse response = usuarioService.cadastra(usuarioRequest);
@@ -93,6 +106,12 @@ public class LoginController {
     }
 
     @PatchMapping("/usuarios/email/{email}/redefinir-senha")
+    @Operation(summary = "Redefine a senha de um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Senha redefinida com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     public UsuarioPreRegistroResponse redefineSenha(@PathVariable String email,
                                                     @Valid @RequestBody RedefinicaoSenhaRequest request) {
         logger.info("PATCH /usuarios/email/{email}/redefinir-senha - Iniciando a redefinição de senha do usuário: {}, novaSenha: {}", email, request.getPassword());

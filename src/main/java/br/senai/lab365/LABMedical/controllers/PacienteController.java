@@ -4,16 +4,18 @@ import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
 import br.senai.lab365.LABMedical.services.PacienteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import org.springframework.security.core.AuthenticationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/pacientes")
@@ -29,65 +31,59 @@ public class PacienteController {
 
     // 1. Criar Paciente
     @PostMapping
+    @Operation(summary = "Cadastrar um novo paciente", description = "Endpoint para cadastrar um novo paciente", responses = {
+            @ApiResponse(responseCode = "201", description = "Paciente cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida, por exemplo, dados ausentes ou incorretos"),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação"),
+            @ApiResponse(responseCode = "409", description = "Falha ao cadastrar, pois há algum dado duplicado")
+    })
     public ResponseEntity<?> cadastra(@Valid @RequestBody PacienteRequest request) {
         try {
-            // Tenta cadastrar o paciente e retorna o JSON do paciente cadastrado com status 201.
             PacienteResponse pacienteResponse = service.cadastra(request);
             logger.info("Paciente cadastrado com sucesso: {}", pacienteResponse.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(pacienteResponse); // Código 201
-
         } catch (DataIntegrityViolationException e) {
-            // Captura erros de integridade (dados duplicados), como CPF já cadastrado.
             logger.warn("Erro de integridade: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado!"); // Código 409
-
         } catch (ConstraintViolationException e) {
-            // Captura erros de validação, como dados ausentes ou incorretos.
             logger.warn("Requisição inválida: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Requisição inválida: " + e.getMessage()); // Código 400
-
         } catch (AccessDeniedException | AuthenticationException e) {
-            // Captura erros de autenticação ou autorização.
             logger.warn("Falha de autenticação ou acesso negado.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Falha de autenticação."); // Código 401
-
         } catch (Exception e) {
-            // Captura qualquer outro erro inesperado.
             logger.error("Erro interno ao cadastrar paciente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro interno ao cadastrar paciente."); // Código 500
         }
     }
 
-
     // 2. Obter Paciente por ID
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar paciente por ID", description = "Endpoint para buscar um paciente pelo ID", responses = {
+            @ApiResponse(responseCode = "200", description = "Paciente encontrado"),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação"),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado")
+    })
     public ResponseEntity<?> busca(@PathVariable Long id) {
-        logger.info("GET /pacientes/{} - Iniciando busca dp paciente com ID {}", id, id);
+        logger.info("GET /pacientes/{} - Iniciando busca do paciente com ID {}", id, id);
         try {
-            // Verificação se o paciente existe.
             if (!service.existePaciente(id)) {
                 logger.info("Paciente com ID {} não encontrado.", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Paciente não encontrado."); // Código 404: Paciente não encontrado.
+                        .body("Paciente não encontrado."); // Código 404
             }
 
-            // Retorno do paciente encontrado.
             PacienteResponse paciente = service.busca(id);
             logger.info("Paciente com ID {} encontrado.", id);
-            logger.info("Requisição para buscar paciente com ID {} concluída com sucesso.", id);
-            return ResponseEntity.ok(paciente); // Código 200: OK
-
+            return ResponseEntity.ok(paciente); // Código 200
         } catch (AccessDeniedException | AuthenticationException e) {
-            // Captura exceções de autorização/autenticação.
             logger.warn("Falha de autenticação ou acesso negado para o paciente com ID {}.", id);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Falha de autenticação."); // Código 401: Unauthorized
-
+                    .body("Falha de autenticação."); // Código 401
         } catch (Exception e) {
-            // Captura qualquer outro erro inesperado.
             logger.error("Erro interno ao buscar paciente com ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro interno ao buscar o paciente."); // Código 500
@@ -96,31 +92,30 @@ public class PacienteController {
 
     // 3. Atualizar Paciente
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualiza(
-            @PathVariable Long id,
-            @Valid @RequestBody PacienteRequest request) {
+    @Operation(summary = "Atualizar informações do paciente", description = "Endpoint para atualizar as informações de um paciente", responses = {
+            @ApiResponse(responseCode = "200", description = "Paciente atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida, por exemplo, dados ausentes ou incorretos"),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação"),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado")
+    })
+    public ResponseEntity<?> atualiza(@PathVariable Long id, @Valid @RequestBody PacienteRequest request) {
         try {
-            // Verificação se o paciente existe.
             if (!service.existePaciente(id)) {
                 logger.info("Paciente com ID {} não encontrado.", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Paciente não encontrado.");  // Código 404.
+                        .body("Paciente não encontrado.");  // Código 404
             }
 
             logger.info("Paciente com ID {} encontrado e atualizado.", id);
             PacienteResponse pacienteAtualizado = service.atualiza(id, request);
-            return ResponseEntity.ok(pacienteAtualizado);  // Código 200.
-
+            return ResponseEntity.ok(pacienteAtualizado);  // Código 200
         } catch (ConstraintViolationException e) {
-            // Captura erros de validação de dados.
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Requisição inválida: " + e.getMessage());  // Código 400.
+                    .body("Requisição inválida: " + e.getMessage());  // Código 400
         } catch (AuthenticationException | AccessDeniedException e) {
-            // Captura falhas de autenticação/autorização.
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Falha de autenticação.");  // Código 401.
+                    .body("Falha de autenticação.");  // Código 401
         } catch (Exception e) {
-            // Captura qualquer outro erro inesperado.
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro interno ao tentar atualizar o paciente.");
         }
@@ -128,36 +123,38 @@ public class PacienteController {
 
     // 4. Excluir Paciente
     @DeleteMapping("/{id}")
+    @Operation(summary = "Remover paciente por ID", description = "Endpoint para excluir um paciente pelo ID", responses = {
+            @ApiResponse(responseCode = "204", description = "Paciente excluído com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação"),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado")
+    })
     public ResponseEntity<String> remove(@PathVariable Long id) {
-        // Verificação se o paciente existe antes de tentar removê-lo.
         if (!service.existePaciente(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Paciente não encontrado."); // Código 404: Paciente não encontrado.
+                    .body("Paciente não encontrado."); // Código 404
         }
 
         try {
-            service.remove(id); // Remoção do paciente.
-            // Retorna 200 OK com a mensagem no corpo da resposta.
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Paciente excluído com sucesso."); // Mensagem no corpo com sucesso.
+            service.remove(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Código 204
         } catch (AccessDeniedException | AuthenticationException e) {
-            // Captura falhas de autenticação.
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Falha de autenticação."); // Código 401: Unauthorized.
+                    .body("Falha de autenticação."); // Código 401
         } catch (DataIntegrityViolationException e) {
-            // Captura erros de integridade, como dependências ativas.
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Erro ao remover: o paciente tem dependências ativas."); // Código 409: Conflito.
+                    .body("Erro ao remover: o paciente tem dependências ativas."); // Código 409
         } catch (Exception e) {
-            // Captura qualquer outro erro inesperado.
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno ao tentar remover o paciente."); // Código 500: Erro interno.
+                    .body("Erro interno ao tentar remover o paciente."); // Código 500
         }
     }
 
-
     // 5. Listar Pacientes com Filtros e Paginação
     @GetMapping
+    @Operation(summary = "Listar pacientes com filtros e paginação", description = "Endpoint para listar pacientes com filtros e paginação", responses = {
+            @ApiResponse(responseCode = "200", description = "Lista de pacientes recuperada com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação")
+    })
     public ResponseEntity<?> lista(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String nome,
@@ -165,24 +162,17 @@ public class PacienteController {
             @RequestParam(required = false) String email,
             @RequestParam(value = "numeroPagina", defaultValue = "0") int numeroPagina,
             @RequestParam(value = "tamanhoPagina", defaultValue = "10") int tamanhoPagina) {
-
         try {
-            // Retorna a lista paginada de pacientes com filtros, se aplicáveis.
             PacienteResponsePagination pacientes = service.lista(id, nome, telefone, email, numeroPagina, tamanhoPagina);
             logger.info("Lista de pacientes recuperada com sucesso.");
             return ResponseEntity.ok(pacientes); // Código 200
-
         } catch (AccessDeniedException | AuthenticationException e) {
-            // Captura falhas de autenticação ou autorização.
-            logger.warn("Falha de autenticação ao listar pacientes.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Falha de autenticação."); // Código 401
-
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Falha de autenticação."); // Código 401
         } catch (Exception e) {
-            // Captura qualquer outro erro inesperado.
-            logger.error("Erro ao listar pacientes: {}", e.getMessage());
+            logger.error("Erro interno ao listar pacientes: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno ao listar pacientes."); // Código 500 (caso necessário)
+                    .body("Erro interno ao listar pacientes."); // Código 500
         }
     }
-
 }
