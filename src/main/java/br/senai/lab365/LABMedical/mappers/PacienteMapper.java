@@ -165,6 +165,11 @@ public class PacienteMapper {
         response.setEmail(paciente.getEmail());
         response.setIdade(calcularIdade(paciente.getDataNascimento()));
         response.setConvenio(paciente.getConvenio());
+        response.setCpf(paciente.getCpf());
+        response.setDataNascimento(paciente.getDataNascimento());
+        response.setContatoEmergencia(paciente.getContatoEmergencia());
+        response.setListaAlergias(paciente.getListaAlergias());
+        response.setListaCuidados(paciente.getListaCuidados());
         return response;
     }
 
