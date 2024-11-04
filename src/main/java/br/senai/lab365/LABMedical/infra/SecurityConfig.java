@@ -50,7 +50,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/usuarios/email/{email}/redefinir-senha")
                         .permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/{id}")
+                        .requestMatchers(HttpMethod.GET, "/usuarios")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+
+                        .requestMatchers(HttpMethod.GET,  "/usuarios/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.PUT, "/usuarios/{id}")
@@ -102,7 +105,7 @@ public class SecurityConfig {
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
                         .requestMatchers(HttpMethod.GET, "/pacientes/{id}/prontuarios")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO", "SCOPE_PACIENTE")
 
                         .requestMatchers(HttpMethod.GET, "/pacientes/{id}/exames")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
