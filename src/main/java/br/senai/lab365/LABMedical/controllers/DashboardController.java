@@ -2,6 +2,9 @@ package br.senai.lab365.LABMedical.controllers;
 
 import br.senai.lab365.LABMedical.dtos.DashboardResponse;
 import br.senai.lab365.LABMedical.services.DashboardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +24,11 @@ public class DashboardController {
         this.service = service;
     }
 
-
+    @Operation(summary = "Obtém dados do dashboard", description = "Retorna as informações do dashboard do usuário autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Dados do dashboard retornados com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação.")
+    })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public DashboardResponse getDashboard() {

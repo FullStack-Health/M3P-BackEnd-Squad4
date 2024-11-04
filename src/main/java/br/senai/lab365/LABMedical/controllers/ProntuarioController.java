@@ -5,6 +5,9 @@ import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
 import br.senai.lab365.LABMedical.services.ProntuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,12 @@ public class ProntuarioController {
         this.service = service;
     }
 
+    @Operation(summary = "Lista todos os prontuários", description = "Retorna uma lista de prontuários com base nos parâmetros fornecidos.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listagem de prontuários concluída com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação."),
+            @ApiResponse(responseCode = "404", description = "Não há prontuários cadastrados.")
+    })
     @GetMapping("/prontuarios")
     @ResponseStatus(HttpStatus.OK)
     public SummaryResponsePagination lista(
@@ -37,6 +46,12 @@ public class ProntuarioController {
         return response;
     }
 
+    @Operation(summary = "Busca um prontuário pelo ID do paciente", description = "Retorna o prontuário do paciente com base no ID fornecido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca do prontuário concluída com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação."),
+            @ApiResponse(responseCode = "404", description = "Não há pacientes cadastrados com o id informado.")
+    })
     @GetMapping("/{idPaciente}/prontuarios")
     @ResponseStatus(HttpStatus.OK)
     public ProntuarioResponse busca(@PathVariable Long idPaciente) {
@@ -46,6 +61,12 @@ public class ProntuarioController {
         return response;
     }
 
+    @Operation(summary = "Lista todos os exames de um paciente", description = "Retorna uma lista de exames do paciente com base no ID fornecido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listagem de exames concluída com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação."),
+            @ApiResponse(responseCode = "404", description = "Não há exames cadastrados para o paciente informado.")
+    })
     @GetMapping("/{idPaciente}/exames")
     @ResponseStatus(HttpStatus.OK)
     public List<ExameResponse> listaTodosExamesPaciente(@PathVariable Long idPaciente) {
@@ -55,6 +76,12 @@ public class ProntuarioController {
         return response;
     }
 
+    @Operation(summary = "Lista todas as consultas de um paciente", description = "Retorna uma lista de consultas do paciente com base no ID fornecido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listagem de consultas concluída com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Falha de autenticação."),
+            @ApiResponse(responseCode = "404", description = "Não há consultas cadastradas para o paciente informado.")
+    })
     @GetMapping("/{idPaciente}/consultas")
     @ResponseStatus(HttpStatus.OK)
     public List<ConsultaResponse> listaTodasConsultasPaciente(@PathVariable Long idPaciente) {
