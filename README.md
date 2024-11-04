@@ -1,7 +1,9 @@
 # LABMedical
 
 ## Descrição do Projeto
-LABMedical é uma API RESTful para Back-End, construída em Java e Spring Boot e gerenciada com Maven, que visa resolver a dificuldade de gerenciar informações de pacientes em um ambiente médico. Isso inclui o armazenamento seguro de dados pessoais, e dados médicos como informações de consultas, exames e prontuários de pacientes, bem como a atribuição de perfis de acesso de usuário.
+VutalCare by LABMedical é uma API RESTful para Back-End, de gerenciamento de prontuário médico-hospitalar.
+Foi desenvolvida em Java e Spring Boot e gerenciada com Maven, visando resolver a dificuldade de gerenciar informações de pacientes em um ambiente médico.
+Isso inclui o armazenamento seguro de dados pessoais e médicos como informações de consultas, exames e prontuários de pacientes, bem como a atribuição de perfis de acesso de usuário ao sistema.
 
 
 ## Tecnologias Utilizadas
@@ -13,11 +15,13 @@ LABMedical é uma API RESTful para Back-End, construída em Java e Spring Boot e
 - Spring Data JPA
 - Maven
 - PostgreSQL
+- Swagger
+- JUnit
 
 ## Funcionalidades
 O sistema oferece:
 - Operações CRUD de pacientes, consultas, exames e prontuários;
-- Controle de acesso usando JWT, Spring Security e a encriptação de senhas.
+- Controle de acesso de perfis de acesso dos tipos 'ADMIN', 'MÉDICO' e 'PACIENTE' usando JWT, Spring Security e a encriptação de senhas.
 
 
 ## Como Executar o Projeto
@@ -32,10 +36,10 @@ O sistema oferece:
 Quando o sistema é inicializado pela primeira vez, um usuário admin é criado automaticamente. As credenciais deste usuário são:
 
 - Email: admin@example.com
-- Senha: admin
+- Senha: admin123
 
 ## Passo 2: Obtenção do Token JWT
-Para obter o token JWT para o usuário admin, faça uma requisição POST para o endpoint "/login" com as credenciais do usuário admin no corpo da requisição.
+Para obter o token JWT para o usuário admin, faça uma requisição POST para o endpoint "/login" com as credenciais do usuário admin no corpo da requisição, este token tem validade de 24h.
 
 Exemplo de requisição usando cURL:
 
@@ -44,7 +48,7 @@ curl -X POST -H "Content-Type: application/json" -d
 
 '{
 	"email":"admin@example.com",
-	"password":"admin"
+	"password":"admin123"
 }'
 
 http://localhost:8080/login
@@ -56,8 +60,15 @@ Exemplo de resposta:
 
 ```json
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImV4cCI6MTYxNzU0NTIwMH0.rrVO4hz5H8KJxYISHXY4YFZACwBZ3ZLBIdV8Jy6GfHg",
-    "expiresIn": 36000
+  "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImV4cCI6MTczMDg0NjU0OCwicGFjaWVudGVJZCI6IiIsImlhdCI6MTczMDc2MDE0OCwic2NvcGUiOiJBRE1JTiJ9.OQQjTC0JcCgk7AGRXcbU7sMBfSAqd44MuahpMm4Agito_QphcrWAkab_QlghSLe4Bw4NVuVpQ0laH2-YFeabMdMfHUNWClojkBd86nsfHNzsXMMn2ax1PO_kslj7qODT4tu5W20NDyz33l6O4EYy9NX9On9jFu4740PVn2sq3VahNWbCPi9puU8XsqEjsP8VDwZCe0fJGfznBl4pj0B2a9-rGSxtuqA9nx8hlOoOrLDZ0mIAMTK8axaw35UIhKmkP-v0dzO8nOKwPLn0MN084uEetiyqb4HiTU6s1SQdEcKD0oyPxuzicCW0FowIx8lXJNvtQVopA5tbEgjbZvuhiw",
+  "tempoExpiracao": 86400,
+  "listaNomesPerfis": [
+    "ADMIN"
+  ],
+  "pacienteId": "",
+  "usuarioId": "1",
+  "email": "admin@example.com",
+  "nome": "Administrador"
 }
 ```
 
@@ -73,15 +84,20 @@ curl -X GET -H "Authorization: Bearer <token>" http://localhost:8080/resource
 Substitua "<token>" pelo token JWT do usuário admin.
 
 ## Nota
-Lembre-se de que o token JWT tem um tempo de expiração, então você precisará obter um novo token quando o atual expirar. Para obter um novo token, repita o passo 2.
+Lembre-se de que o token JWT tem um tempo de expiração DE 24h, então você precisará obter um novo token quando o atual expirar. Para obter um novo token, repita o passo 2.
+
+
+## Acessando a Documentação
+A documentação da API pode ser acessada através do Swagger UI, disponível em http://localhost:8080/swagger-ui.html, enquanto o projeto estiver inicializado no sistema.
 
 
 ## Requisições do Insomnia
 As requisições do Insomnia para este projeto estão incluídas como um arquivo anexo. Você pode importar este arquivo no Insomnia para testar facilmente todas as rotas e funcionalidades da API.
-<<<<<<< HEAD
 
 
-## Vídeo de Apresentação do Projeto\
-Veja a apresentação do projeto no link a seguir: https://drive.google.com/file/d/1bIH2XTFCyOPkyJPH8feaY48rAvYCwhDH/view?usp=sharing
-=======
->>>>>>> master
+## Equipe de Desenvolvimento do Sistema
+- André Junckes da Silva Mattos
+- Felipe Augusto Antunes Da Crus
+- Heloise Adriano Pereira
+- Marcos Grechi Anastacio
+
