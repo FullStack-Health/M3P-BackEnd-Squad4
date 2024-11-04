@@ -1,7 +1,7 @@
 # LABMedical
 
 ## Descrição do Projeto
-VutalCare by LABMedical é uma API RESTful para Back-End, de gerenciamento de prontuário médico-hospitalar.
+VitalCare by LABMedical é uma API RESTful para Back-End, de gerenciamento de prontuário médico-hospitalar.
 Foi desenvolvida em Java e Spring Boot e gerenciada com Maven, visando resolver a dificuldade de gerenciar informações de pacientes em um ambiente médico.
 Isso inclui o armazenamento seguro de dados pessoais e médicos como informações de consultas, exames e prontuários de pacientes, bem como a atribuição de perfis de acesso de usuário ao sistema.
 
