@@ -7,6 +7,7 @@ import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.entities.Usuario;
 import br.senai.lab365.LABMedical.exceptions.CpfDuplicadoException;
+import br.senai.lab365.LABMedical.exceptions.PacienteNaoEncontradoException;
 import br.senai.lab365.LABMedical.mappers.PacienteMapper;
 import br.senai.lab365.LABMedical.repositories.EnderecoRepository;
 import br.senai.lab365.LABMedical.repositories.PacienteRepository;
@@ -119,9 +120,10 @@ public class PacienteService {
             .map(pacienteMapper::getRequestToResponse)
             .collect(Collectors.toList());
 
-    if (pacientes.isEmpty()) {
-        throw new EntityNotFoundException("Nenhum paciente encontrado");
-    }
+   if (pacientes.isEmpty()) {
+       String queryParameter = "id:" + id + ", nome:" + nome + ", telefone:" + telefone + ", email:" + email;
+       throw new PacienteNaoEncontradoException("Nenhum paciente encontrado", queryParameter);
+   }
 
     PacienteResponsePagination response = new PacienteResponsePagination();
     response.setPacientes(pacientes);

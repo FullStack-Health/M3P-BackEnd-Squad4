@@ -3,6 +3,7 @@ package br.senai.lab365.LABMedical.controllers;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponsePagination;
+import br.senai.lab365.LABMedical.exceptions.PacienteNaoEncontradoException;
 import br.senai.lab365.LABMedical.services.PacienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -153,6 +154,7 @@ public class PacienteController {
     @GetMapping
     @Operation(summary = "Listar pacientes com filtros e paginação", description = "Endpoint para listar pacientes com filtros e paginação", responses = {
             @ApiResponse(responseCode = "200", description = "Lista de pacientes recuperada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado"),
             @ApiResponse(responseCode = "401", description = "Falha de autenticação")
     })
     public ResponseEntity<?> lista(
@@ -169,6 +171,9 @@ public class PacienteController {
         } catch (AccessDeniedException | AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Falha de autenticação."); // Código 401
+        } catch (PacienteNaoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Paciente não encontrado: " + e.getQueryParameter()); // Código 404
         } catch (Exception e) {
             logger.error("Erro interno ao listar pacientes: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
