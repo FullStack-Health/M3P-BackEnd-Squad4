@@ -4,6 +4,7 @@ import br.senai.lab365.LABMedical.dtos.paciente.EnderecoRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteGetRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteRequest;
 import br.senai.lab365.LABMedical.dtos.paciente.PacienteResponse;
+import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.entities.Paciente;
 import br.senai.lab365.LABMedical.entities.Perfil;
 import br.senai.lab365.LABMedical.entities.Usuario;
@@ -23,19 +24,17 @@ import java.util.Set;
 public class PacienteMapper {
 
     private final EnderecoMapper enderecoMapper;
-    private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final PerfilRepository perfilRepository;
     private final PasswordEncoder passwordEncoder;
 
     public PacienteMapper(EnderecoMapper enderecoMapper,
-                          UsuarioRepository usuarioRepository,
+//                          UsuarioRepository usuarioRepository,
                           UsuarioMapper usuarioMapper,
                           PerfilRepository perfilRepository,
                           PasswordEncoder passwordEncoder)
     {
         this.enderecoMapper = enderecoMapper;
-        this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
         this.perfilRepository = perfilRepository;
         this.passwordEncoder = passwordEncoder;
@@ -102,7 +101,7 @@ public class PacienteMapper {
             return null;
         }
 
-        Long usuarioId = paciente.getUsuario() != null ? paciente.getUsuario().getId(): null;
+//        Long usuarioId = paciente.getUsuario() != null ? paciente.getUsuario().getId(): null;
 
         return new PacienteResponse(
                 paciente.getId(),
@@ -123,7 +122,7 @@ public class PacienteMapper {
                 paciente.getNumeroConvenio(),
                 paciente.getValidadeConvenio(),
                 enderecoMapper.toResponse(paciente.getEndereco()),
-                usuarioMapper.toResponse(usuarioRepository.getReferenceById(usuarioId))
+                usuarioMapper.toResponse(paciente.getUsuario())
         );
     }
 
@@ -149,11 +148,36 @@ public class PacienteMapper {
             if (enderecoRequest.getCep() != null) paciente.getEndereco().setCep(enderecoRequest.getCep());
             if (enderecoRequest.getRua() != null) paciente.getEndereco().setRua(enderecoRequest.getRua());
             if (enderecoRequest.getNumero() != null) paciente.getEndereco().setNumero(enderecoRequest.getNumero());
-            if (enderecoRequest.getComplemento() != null) paciente.getEndereco().setComplemento(enderecoRequest.getComplemento());
+            if (enderecoRequest.getComplemento() != null)
+                paciente.getEndereco().setComplemento(enderecoRequest.getComplemento());
             if (enderecoRequest.getBairro() != null) paciente.getEndereco().setBairro(enderecoRequest.getBairro());
             if (enderecoRequest.getCidade() != null) paciente.getEndereco().setCidade(enderecoRequest.getCidade());
             if (enderecoRequest.getEstado() != null) paciente.getEndereco().setEstado(enderecoRequest.getEstado());
-            if (enderecoRequest.getPtoReferencia() != null) paciente.getEndereco().setPtoReferencia(enderecoRequest.getPtoReferencia());
+            if (enderecoRequest.getPtoReferencia() != null)
+                paciente.getEndereco().setPtoReferencia(enderecoRequest.getPtoReferencia());
+        }
+
+        // Atualizar os campos do usuário associado
+        Usuario usuario = paciente.getUsuario();
+        if (request.getUsuario() != null) {
+            UsuarioRequest usuarioRequest = request.getUsuario();
+            if (usuarioRequest.getNome() != null) usuario.setNome(usuarioRequest.getNome());
+            if (usuarioRequest.getEmail() != null) usuario.setEmail(usuarioRequest.getEmail());
+            if (usuarioRequest.getCpf() != null) usuario.setCpf(usuarioRequest.getCpf());
+            if (usuarioRequest.getDataNascimento() != null)
+                usuario.setDataNascimento(usuarioRequest.getDataNascimento());
+            if (usuarioRequest.getTelefone() != null) usuario.setTelefone(usuarioRequest.getTelefone());
+            if (usuarioRequest.getPassword() != null) usuario.setPassword(usuarioRequest.getPassword());
+            if (usuarioRequest.getSenhaComMascara() != null)
+                usuario.setSenhaComMascara(usuarioRequest.getSenhaComMascara());
+            if (usuarioRequest.getNomePerfil() != null) {
+                Perfil perfil = perfilRepository.findByNomePerfil(usuarioRequest.getNomePerfil());
+                if (perfil != null) {
+                    Set<Perfil> perfis = new HashSet<>();
+                    perfis.add(perfil);
+                    usuario.setPerfilList(perfis);
+                }
+            }
         }
     }
 
