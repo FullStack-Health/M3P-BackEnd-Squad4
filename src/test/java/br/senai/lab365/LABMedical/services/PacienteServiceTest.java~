@@ -47,24 +47,24 @@ class PacienteServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    void cadastraPacienteComSucesso() {
-//        PacienteRequest pacienteRequest = new PacienteRequest();
-//        pacienteRequest.setCpf("12345678900");
-//        Paciente paciente = new Paciente();
-//        PacienteResponse pacienteResponse = new PacienteResponse();
-//
-//        when(pacienteRepository.existsByCpf("12345678900")).thenReturn(false);
-//        when(pacienteMapper.toEntity(pacienteRequest)).thenReturn(paciente);
-//        when(usuarioRepository.save(paciente.getUsuario())).thenReturn(paciente.getUsuario());
-//        when(pacienteRepository.save(paciente)).thenReturn(paciente);
-//        when(pacienteMapper.toResponse(paciente)).thenReturn(pacienteResponse);
-//
-//        PacienteResponse result = pacienteService.cadastra(pacienteRequest);
-//
-//        assertNotNull(result);
-//        verify(pacienteRepository).save(paciente);
-//    }
+    @Test
+    void cadastraPacienteComSucesso() {
+        PacienteRequest pacienteRequest = new PacienteRequest();
+        pacienteRequest.setCpf("12345678900");
+        Paciente paciente = new Paciente();
+        PacienteResponse pacienteResponse = new PacienteResponse();
+
+        when(pacienteRepository.existsByCpf("12345678900")).thenReturn(false);
+        when(pacienteMapper.toEntity(pacienteRequest)).thenReturn(paciente);
+        when(usuarioRepository.save(paciente.getUsuario())).thenReturn(paciente.getUsuario());
+        when(pacienteRepository.save(paciente)).thenReturn(paciente);
+        when(pacienteMapper.toResponse(paciente)).thenReturn(pacienteResponse);
+
+        PacienteResponse result = pacienteService.cadastra(pacienteRequest);
+
+        assertNotNull(result);
+        verify(pacienteRepository).save(paciente);
+    }
 
     @Test
     void cadastraPacienteComCpfDuplicado() {

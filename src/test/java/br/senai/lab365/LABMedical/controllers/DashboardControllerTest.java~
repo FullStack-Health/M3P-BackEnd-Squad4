@@ -51,7 +51,7 @@ public class DashboardControllerTest {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(() -> "ROLE_USER");
 
-        
+
         when(dashboardService.getDashboard("ROLE_USER")).thenReturn(dashboardResponse);
         // Act
         DashboardResponse result = dashboardController.getDashboard();
