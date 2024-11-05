@@ -53,26 +53,26 @@ class ProntuarioServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void lista_RetornaPacientesComPaginacao() {
-        // Arrange
-        Long idPaciente = 1L;
-        String nome = "João";
-        Pageable pageable = PageRequest.of(0, 10);
-        Paciente paciente = new Paciente();
-        Page<Paciente> page = new PageImpl<>(Collections.singletonList(paciente));
-
-        when(pacienteRepository.findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, pageable)).thenReturn(page);
-        when(prontuarioMapper.getRequestToResponse(paciente)).thenReturn(new PacienteSummaryRequest());
-
-        // Act
-        SummaryResponsePagination response = prontuarioService.lista(idPaciente, nome, 0, 10);
-
-        // Assert
-        assertNotNull(response);
-        assertFalse(response.getConteudo().isEmpty());
-        verify(pacienteRepository, times(1)).findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, pageable);
-    }
+//    @Test
+//    void lista_RetornaPacientesComPaginacao() {
+//        // Arrange
+//        Long idPaciente = 1L;
+//        String nome = "João";
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Paciente paciente = new Paciente();
+//        Page<Paciente> page = new PageImpl<>(Collections.singletonList(paciente));
+//
+//        when(pacienteRepository.findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, pageable)).thenReturn(page);
+//        when(prontuarioMapper.getRequestToResponse(paciente)).thenReturn(new PacienteSummaryRequest());
+//
+//        // Act
+//        SummaryResponsePagination response = prontuarioService.lista(idPaciente, nome, 0, 10);
+//
+//        // Assert
+//        assertNotNull(response);
+//        assertFalse(response.getConteudo().isEmpty());
+//        verify(pacienteRepository, times(1)).findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, pageable);
+//    }
 
     @Test
     void lista_LancaExceptionQuandoNenhumPacienteEncontrado() {

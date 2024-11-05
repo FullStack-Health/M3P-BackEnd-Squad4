@@ -1,0 +1,55 @@
+package br.senai.lab365.LABMedical.repositories;
+
+import br.senai.lab365.LABMedical.entities.Perfil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
+@ActiveProfiles("test") // Usa o perfil de teste que carrega o H2
+public class PerfilRepositoryIntegrationTest {
+
+    @Autowired
+    private PerfilRepository perfilRepository;
+
+    @BeforeEach
+    public void setUp() {
+        // Limpa o repositório antes de cada teste
+        perfilRepository.deleteAll();
+
+        // Insere alguns dados de teste
+        Perfil perfilAdmin = new Perfil();
+        perfilAdmin.setNomePerfil("ADMIN");
+        perfilRepository.save(perfilAdmin);
+
+        Perfil perfilUser = new Perfil();
+        perfilUser.setNomePerfil("USER");
+        perfilRepository.save(perfilUser);
+    }
+
+    @Test
+    public void testFindByNomePerfil() {
+        // Verifica se o perfil "ADMIN" existe no banco de dados
+        Perfil perfilAdmin = perfilRepository.findByNomePerfil("ADMIN");
+        assertEquals("ADMIN", perfilAdmin.getNomePerfil());
+
+        // Verifica se o perfil "USER" existe no banco de dados
+        Perfil perfilUser = perfilRepository.findByNomePerfil("USER");
+        assertEquals("USER", perfilUser.getNomePerfil());
+    }
+
+    @Test
+    public void testFindByNomePerfilNotFound() {
+        // Verifica que um perfil não existente retorna null
+        Perfil perfilNaoExistente = perfilRepository.findByNomePerfil("MANAGER");
+        assertTrue(perfilNaoExistente == null);
+    }
+}

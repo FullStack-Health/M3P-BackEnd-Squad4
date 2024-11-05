@@ -177,27 +177,27 @@ class PacienteMapperTest {
         assertEquals("Feminino", paciente.getGenero());
     }
 
-//    @Test
-//    void getRequestToResponse_DeveConverterPacienteParaPacienteGetRequest() {
-//        // Arrange
-//        Paciente paciente = new Paciente();
-//        paciente.setId(1L);
-//        paciente.setNome("John Doe");
-//        paciente.setTelefone("1234-5678");
-//        paciente.setEmail("john@example.com");
-//        paciente.setDataNascimento(LocalDate.of(1990, 1, 1));
-//
-//        // Act
-//        PacienteGetRequest response = pacienteMapper.getRequestToResponse(paciente);
-//
-//        // Assert
-//        assertNotNull(response);
-//        assertEquals(paciente.getId(), response.getId());
-//        assertEquals(paciente.getNome(), response.getNome());
-//        assertEquals(paciente.getTelefone(), response.getTelefone());
-//        assertEquals(paciente.getEmail(), response.getEmail());
-//        assertEquals(30, response.getIdade()); // Ajuste para refletir o ano atual
-//    }
+    @Test
+    void getRequestToResponse_DeveConverterPacienteParaPacienteGetRequest() {
+        // Arrange
+        Paciente paciente = new Paciente();
+        paciente.setId(1L);
+        paciente.setNome("John Doe");
+        paciente.setTelefone("1234-5678");
+        paciente.setEmail("john@example.com");
+        paciente.setDataNascimento(LocalDate.of(1990, 1, 1));
+
+        // Act
+        PacienteGetRequest response = pacienteMapper.getRequestToResponse(paciente);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(paciente.getId(), response.getId());
+        assertEquals(paciente.getNome(), response.getNome());
+        assertEquals(paciente.getTelefone(), response.getTelefone());
+        assertEquals(paciente.getEmail(), response.getEmail());
+        assertEquals(30, response.getIdade()); // Ajuste para refletir o ano atual
+    }
 
 }
 
