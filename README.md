@@ -84,7 +84,7 @@ curl -X GET -H "Authorization: Bearer <token>" http://localhost:8080/resource
 Substitua "<token>" pelo token JWT do usuário admin.
 
 ## Nota
-Lembre-se de que o token JWT tem um tempo de expiração DE 24h, então você precisará obter um novo token quando o atual expirar. Para obter um novo token, repita o passo 2.
+Lembre-se de que o token JWT tem um tempo de expiração de 24h, então você precisará obter um novo token quando o atual expirar. Para obter um novo token, repita o passo 2.
 
 
 ## Acessando a Documentação
