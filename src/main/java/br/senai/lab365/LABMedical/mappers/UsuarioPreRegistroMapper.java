@@ -29,13 +29,19 @@ public class UsuarioPreRegistroMapper {
         if (perfil != null) {
             perfis.add(perfil);
         }
+
+        String senhaComMascara = mascaraSenha(request.getSenhaComMascara());
+
         return new Usuario(
                 null,
                 null,
                 request.getEmail(),
                 null,
-                null,                request.getPassword(),
-                perfis
+                null,
+                null,
+                request.getPassword(),
+                perfis,
+                senhaComMascara
         );
     }
 
@@ -52,7 +58,23 @@ public class UsuarioPreRegistroMapper {
                 usuario.getId(),
                 usuario.getEmail(),
                 usuario.getPassword(),
-                listaNomesPerfis
+                listaNomesPerfis,
+                usuario.getSenhaComMascara()
         );
+    }
+
+    public String mascaraSenha(String senhaOriginal) {
+        if (senhaOriginal == null) {
+            return null;
+        }
+        int length = senhaOriginal.length();
+        if (length <= 4) {
+            return senhaOriginal;
+        }
+        StringBuilder comMascara = new StringBuilder(senhaOriginal.substring(0, 4));
+        for (int i = 4; i < length; i++) {
+            comMascara.append('*');
+        }
+        return comMascara.toString();
     }
 }

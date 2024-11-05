@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class EnderecoRequest {
 
-    @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP inválido. Enviar no formato 00000-000")
+//    @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP inválido. Enviar no formato 00000-000")
     private String cep;
     private String cidade;
     private String estado;

@@ -1,5 +1,7 @@
 package br.senai.lab365.LABMedical.services;
 
+import br.senai.lab365.LABMedical.dtos.consulta.ConsultaResponse;
+import br.senai.lab365.LABMedical.dtos.exame.ExameResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.PacienteSummaryRequest;
 import br.senai.lab365.LABMedical.dtos.prontuario.ProntuarioResponse;
 import br.senai.lab365.LABMedical.dtos.prontuario.SummaryResponsePagination;
@@ -34,54 +36,69 @@ public class ProntuarioService {
         this.mapper = mapper;
     }
 
-
     public SummaryResponsePagination lista(Long idPaciente, String nome, int numeroPagina, int tamanhoPagina) {
         Pageable paginacao = PageRequest.of(numeroPagina, tamanhoPagina);
-        Page<Paciente> paginaPacientes;
+        Page<Paciente> paginaPacientes = buscaPacientes(idPaciente, nome, paginacao);
 
-        if (nome != null && idPaciente != null) {
-            paginaPacientes = pacienteRepository.findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, paginacao);
-        } else if (nome != null) {
-            paginaPacientes = pacienteRepository.findByNomeIgnoreCaseContaining(nome, paginacao);
-        } else {
-            paginaPacientes = pacienteRepository.findAll(paginacao);
-        }
+        validaPacienteExistente(idPaciente);
 
-        if (idPaciente != null) {
-            Paciente paciente = pacienteRepository.findById(idPaciente).orElseThrow(
-                    () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
-            );
-        }
-
-        List<PacienteSummaryRequest> conteudo =  paginaPacientes.getContent().stream()
+        List<PacienteSummaryRequest> conteudo = paginaPacientes.getContent().stream()
                 .map(mapper::getRequestToResponse)
                 .collect(Collectors.toList());
 
-        if(conteudo.isEmpty()){
-            throw new EntityNotFoundException("Nenhum paciente encontrado");
-        }
+        validaSeTemConteudo(conteudo);
 
-        SummaryResponsePagination response = new SummaryResponsePagination();
-        response.setConteudo(conteudo);
-        response.setTotalPaginas(paginaPacientes.getTotalPages());
-        response.setTamanhoPagina(tamanhoPagina);
-        response.setPaginaAtual(numeroPagina);
-        response.setTotalElementos((int) paginaPacientes.getTotalElements());
-        response.setUltima(paginaPacientes.isLast());
-
-        return response;
+        return mapper.mapToSummaryResponsePagination(paginaPacientes, conteudo, numeroPagina, tamanhoPagina);
     }
 
     public ProntuarioResponse busca(Long idPaciente) {
-        Paciente paciente = pacienteRepository.findById(idPaciente).orElseThrow(
-                () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
-        );
+        Paciente paciente = findPacienteById(idPaciente);
 
         List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
         List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
 
-           return mapper.getPacienteToProntuario(paciente, exames, consultas);
+        return mapper.getPacienteToProntuario(paciente, exames, consultas);
     }
 
+    public List<ExameResponse> listaTodosExamesPaciente(Long idPaciente) {
+        findPacienteById(idPaciente);
+        List<Exame> exames = exameRepository.findByPacienteId(idPaciente);
 
+        return mapper.examesToResponse(exames);
+    }
+
+    public List<ConsultaResponse> listaTodasConsultasPaciente(Long idPaciente) {
+        findPacienteById(idPaciente);
+        List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
+
+        return mapper.consultasToResponse(consultas);
+    }
+
+    private Page<Paciente> buscaPacientes(Long idPaciente, String nome, Pageable paginacao) {
+        if (nome != null && idPaciente != null) {
+            return pacienteRepository.findByIdAndNomeIgnoreCaseContaining(idPaciente, nome, paginacao);
+        } else if (nome != null) {
+            return pacienteRepository.findByNomeIgnoreCaseContaining(nome, paginacao);
+        } else {
+            return pacienteRepository.findAll(paginacao);
+        }
+    }
+
+    private Paciente findPacienteById(Long idPaciente) {
+        return pacienteRepository.findById(idPaciente).orElseThrow(
+                () -> new EntityNotFoundException("Paciente não encontrado com o id: " + idPaciente)
+        );
+    }
+
+    private void validaPacienteExistente(Long idPaciente) {
+        if (idPaciente != null) {
+            findPacienteById(idPaciente);
+        }
+    }
+
+    private void validaSeTemConteudo(List<PacienteSummaryRequest> conteudo) {
+        if (conteudo.isEmpty()) {
+            throw new EntityNotFoundException("Nenhum paciente encontrado");
+        }
+    }
 }

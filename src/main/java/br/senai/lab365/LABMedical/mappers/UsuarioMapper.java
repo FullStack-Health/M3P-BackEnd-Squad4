@@ -1,6 +1,5 @@
 package br.senai.lab365.LABMedical.mappers;
 
-import br.senai.lab365.LABMedical.dtos.PerfilRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioRequest;
 import br.senai.lab365.LABMedical.dtos.usuario.UsuarioResponse;
 import br.senai.lab365.LABMedical.entities.Perfil;
@@ -34,14 +33,19 @@ public class UsuarioMapper {
         if (perfil != null) {
             perfis.add(perfil);
         }
+
+        String senhaComMascara = mascaraSenha(request.getSenhaComMascara());
+
         return new Usuario(
                 null,
                 request.getNome(),
                 request.getEmail(),
                 request.getDataNascimento(),
                 request.getCpf(),
+                request.getTelefone(),
                 request.getPassword(),
-                perfis
+                perfis,
+                senhaComMascara
         );
     }
 
@@ -60,8 +64,45 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getDataNascimento(),
                 usuario.getCpf(),
+                usuario.getTelefone(),
                 usuario.getPassword(),
-                listaNomesPerfis
+                listaNomesPerfis,
+                usuario.getSenhaComMascara()
         );
+    }
+
+    public List<UsuarioResponse> toResponse(List<Usuario> usuarios) {
+        return usuarios.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public String mascaraSenha(String senhaOriginal) {
+        int length = senhaOriginal.length();
+        if (length <= 4) {
+            return senhaOriginal;
+        }
+        StringBuilder comMascara = new StringBuilder(senhaOriginal.substring(0, 4));
+        for (int i = 4; i < length; i++) {
+            comMascara.append('*');
+        }
+        return comMascara.toString();
+    }
+
+    public void toRequest(Usuario usuario, UsuarioRequest request) {
+        if (usuario == null || request == null) {
+            return;
+        }
+
+        usuario.setNome(request.getNome());
+        usuario.setEmail(request.getEmail());
+        usuario.setDataNascimento(request.getDataNascimento());
+        usuario.setCpf(request.getCpf());
+        usuario.setTelefone(request.getTelefone());
+
+        Perfil perfil = perfilRepository.findByNomePerfil(request.getNomePerfil());
+        if (perfil != null) {
+            usuario.setPerfilList(Set.of(perfil));
+        }
     }
 }
