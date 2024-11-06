@@ -47,7 +47,6 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
 
-
                         .requestMatchers(HttpMethod.POST, "/usuarios/perfil/{nomePerfil}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
 
@@ -55,7 +54,7 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/usuarios")
-                        .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")
+                        .permitAll()
 
                         .requestMatchers(HttpMethod.GET,  "/usuarios/{id}")
                         .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_MÉDICO")

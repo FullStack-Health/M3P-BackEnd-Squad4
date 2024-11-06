@@ -106,6 +106,7 @@ public class LoginController {
     }
 
     @PatchMapping("/usuarios/email/{email}/redefinir-senha")
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Redefine a senha de um usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Senha redefinida com sucesso"),
