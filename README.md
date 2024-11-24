@@ -1,62 +1,156 @@
-# LABMedical
+# LABMedical 🏥
 
-## Descrição do Projeto
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring-boot)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
+[![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
+[![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)](https://junit.org/junit5/)
+[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)](https://jwt.io/)
+
+<div align="center">
+  <img src="./assets/banner.png" alt="VitalCare Banner" />
+</div>
+
+## 📋 Descrição do Projeto
+
 VitalCare by LABMedical é uma API RESTful para Back-End, de gerenciamento de prontuário médico-hospitalar.
 Foi desenvolvida em Java e Spring Boot e gerenciada com Maven, visando resolver a dificuldade de gerenciar informações de pacientes em um ambiente médico.
-Isso inclui o armazenamento seguro de dados pessoais e médicos como informações de consultas, exames e prontuários de pacientes, bem como a atribuição de perfis de acesso de usuário ao sistema.
 
+### 🎯 Principais Objetivos:
+- Armazenamento seguro de dados pessoais e médicos
+- Gerenciamento de consultas e exames
+- Controle de prontuários de pacientes
+- Sistema robusto de autenticação e autorização
 
-## Tecnologias Utilizadas
-- Java
-- Spring Boot
-- Spring Security
-- OAuth2
-- JWT
-- Spring Data JPA
-- Maven
-- PostgreSQL
-- Swagger
-- JUnit
+## 🛠️ Tecnologias Utilizadas
 
-## Funcionalidades
-O sistema oferece:
-- Operações CRUD de pacientes, consultas, exames e prontuários;
-- Controle de acesso de perfis de acesso dos tipos 'ADMIN', 'MÉDICO' e 'PACIENTE' usando JWT, Spring Security e a encriptação de senhas.
+<div align="center">
 
+|
+ Tecnologia 
+|
+ Finalidade 
+|
+|
+------------
+|
+------------
+|
+|
+!
+[
+Java
+](
+https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white
+)
+|
+ Linguagem principal 
+|
+|
+!
+[
+Spring Boot
+](
+https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white
+)
+|
+ Framework backend 
+|
+|
+!
+[
+Spring Security
+](
+https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=spring-security&logoColor=white
+)
+|
+ Segurança 
+|
+|
+!
+[
+OAuth2
+](
+https://img.shields.io/badge/OAuth2-2F2F2F?style=flat-square&logo=oauth&logoColor=white
+)
+|
+ Autenticação 
+|
+|
+!
+[
+PostgreSQL
+](
+https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white
+)
+|
+ Banco de dados 
+|
+|
+!
+[
+Swagger
+](
+https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black
+)
+|
+ Documentação API 
+|
 
-## Como Executar o Projeto
-1. Clone o repositório para a sua máquina local usando `git clone`.
-2. Navegue até a pasta do projeto e execute `mvn spring-boot:run` para iniciar a aplicação.
-3. A aplicação estará disponível em `http://localhost:8080`.
+</div>
 
+## ⚙️ Funcionalidades
 
-# Autenticação e Primeiro Acesso ao Sistema
+<div align="center">
+  <img src="./assets/funcionalidades.png" alt="Funcionalidades Diagram" />
+</div>
 
-## Passo 1: Inicialização do Sistema
-Quando o sistema é inicializado pela primeira vez, um usuário admin é criado automaticamente. As credenciais deste usuário são:
+- 📝 Operações CRUD completas para:
+  - Pacientes
+  - Consultas
+  - Exames
+  - Prontuários
+- 🔐 Sistema de controle de acesso com perfis:
+  - ADMIN
+  - MÉDICO
+  - PACIENTE
 
-- Email: admin@example.com
-- Senha: admin123
-
-## Passo 2: Obtenção do Token JWT
-Para obter o token JWT para o usuário admin, faça uma requisição POST para o endpoint "/login" com as credenciais do usuário admin no corpo da requisição, este token tem validade de 24h.
-
-Exemplo de requisição usando cURL:
+## 🚀 Como Executar o Projeto
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d 
+# Clone o repositório
+git clone 
 
-'{
-	"email":"admin@example.com",
-	"password":"admin123"
-}'
+# Entre na pasta do projeto
+cd labmedical
 
-http://localhost:8080/login
+# Execute o projeto
+mvn spring-boot:run
 ```
 
-A resposta desta requisição deve conter o token JWT.
+Acesse `http://localhost:8080` 🌐
 
-Exemplo de resposta:
+## 🔑 Autenticação e Primeiro Acesso
+
+### Credenciais Iniciais
+```json
+{
+  "email": "admin@example.com",
+  "senha": "admin123"
+}
+```
+
+### Exemplo de Request para Login
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+  "email":"admin@example.com",
+  "password":"admin123"
+}' http://localhost:8080/login
+```
+
+### Exemplo de Resposta
 
 ```json
 {
@@ -72,32 +166,71 @@ Exemplo de resposta:
 }
 ```
 
-## Passo 3: Autenticação de Requisições
-Para autenticar as próximas requisições, inclua o token JWT no cabeçalho 'Authorization' de suas requisições. O formato deve ser "Bearer <token>", onde <token> é o token JWT obtido no passo 2.
+<div align="center">
+  <img src="./assets/auth-flow.png" alt="Authentication Flow" />
+</div>
 
-Exemplo de requisição autenticada usando cURL:
+## 📚 Documentação
 
-```bash
-curl -X GET -H "Authorization: Bearer <token>" http://localhost:8080/resource
-```
+Acesse a documentação Swagger em: `http://localhost:8080/swagger-ui.html`
 
-Substitua "<token>" pelo token JWT do usuário admin.
+<div align="center">
+  <img src="./assets/swagger-preview.png" alt="Swagger Documentation Preview" />
+</div>
 
-## Nota
-Lembre-se de que o token JWT tem um tempo de expiração de 24h, então você precisará obter um novo token quando o atual expirar. Para obter um novo token, repita o passo 2.
+## 👥 Equipe de Desenvolvimento
 
+<div align="center">
 
-## Acessando a Documentação
-A documentação da API pode ser acessada através do Swagger UI, disponível em http://localhost:8080/swagger-ui.html, enquanto o projeto estiver inicializado no sistema.
+|
+ Desenvolvedor 
+|
+ GitHub 
+|
+|
+--------------
+|
+--------
+|
+|
+ André Junckes da Silva Mattos 
+|
+[
+![GitHub
+](
+https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
+)
+](https://github.com/) 
+|
+|
+ Felipe Augusto Antunes Da Crus 
+|
+[
+![GitHub
+](
+https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
+)
+](https://github.com/) 
+|
+|
+ Heloise Adriano Pereira 
+|
+[
+![GitHub
+](
+https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
+)
+](https://github.com/) 
+|
+|
+ Marcos Grechi Anastacio 
+|
+[
+![GitHub
+](
+https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
+)
+](https://github.com/) 
+|
 
-
-## Requisições do Insomnia
-As requisições do Insomnia para este projeto estão incluídas como um arquivo anexo. Você pode importar este arquivo no Insomnia para testar facilmente todas as rotas e funcionalidades da API.
-
-
-## Equipe de Desenvolvimento do Sistema
-- André Junckes da Silva Mattos
-- Felipe Augusto Antunes Da Crus
-- Heloise Adriano Pereira
-- Marcos Grechi Anastacio
-
+</div>
