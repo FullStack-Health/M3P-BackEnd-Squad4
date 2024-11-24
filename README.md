@@ -8,10 +8,6 @@
 [![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)](https://junit.org/junit5/)
 [![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)](https://jwt.io/)
 
-<div align="center">
-  <img src="./assets/banner.png" alt="VitalCare Banner" />
-</div>
-
 ## 📋 Descrição do Projeto
 
 VitalCare by LABMedical é uma API RESTful para Back-End, de gerenciamento de prontuário médico-hospitalar.
@@ -102,10 +98,6 @@ https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoC
 
 ## ⚙️ Funcionalidades
 
-<div align="center">
-  <img src="./assets/funcionalidades.png" alt="Funcionalidades Diagram" />
-</div>
-
 - 📝 Operações CRUD completas para:
   - Pacientes
   - Consultas
@@ -166,17 +158,9 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }
 ```
 
-<div align="center">
-  <img src="./assets/auth-flow.png" alt="Authentication Flow" />
-</div>
-
 ## 📚 Documentação
 
 Acesse a documentação Swagger em: `http://localhost:8080/swagger-ui.html`
-
-<div align="center">
-  <img src="./assets/swagger-preview.png" alt="Swagger Documentation Preview" />
-</div>
 
 ## 👥 Equipe de Desenvolvimento
 
