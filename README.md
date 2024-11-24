@@ -36,12 +36,12 @@ Foi desenvolvida em Java e Spring Boot e gerenciada com Maven, visando resolver 
 
 ## ⚙️ Funcionalidades
 
-- 📝 Operações CRUD completas para:
+- Operações CRUD completas para:
   - Pacientes
   - Consultas
   - Exames
   - Prontuários
-- 🔐 Sistema de controle de acesso com perfis:
+- Sistema de controle de acesso com perfis:
   - ADMIN
   - MÉDICO
   - PACIENTE
