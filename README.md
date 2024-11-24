@@ -23,76 +23,14 @@ Foi desenvolvida em Java e Spring Boot e gerenciada com Maven, visando resolver 
 
 <div align="center">
 
-|
- Tecnologia 
-|
- Finalidade 
-|
-|
-------------
-|
-------------
-|
-|
-!
-[
-Java
-](
-https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white
-)
-|
- Linguagem principal 
-|
-|
-!
-[
-Spring Boot
-](
-https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white
-)
-|
- Framework backend 
-|
-|
-!
-[
-Spring Security
-](
-https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=spring-security&logoColor=white
-)
-|
- Segurança 
-|
-|
-!
-[
-OAuth2
-](
-https://img.shields.io/badge/OAuth2-2F2F2F?style=flat-square&logo=oauth&logoColor=white
-)
-|
- Autenticação 
-|
-|
-!
-[
-PostgreSQL
-](
-https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white
-)
-|
- Banco de dados 
-|
-|
-!
-[
-Swagger
-](
-https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black
-)
-|
- Documentação API 
-|
+| Tecnologia                                                                                                                     | Finalidade          |
+|--------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)                               | Linguagem principal |
+| ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)             | Framework Back-End  |
+| ![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=spring-security&logoColor=white) | Segurança           |
+| ![OAuth2](https://img.shields.io/badge/OAuth2-2F2F2F?style=flat-square&logo=oauth&logoColor=white)                             | Autenticação        |
+| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)                | Banco de dados      |
+| ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black)                         | Documentação API    |
 
 </div>
 
@@ -166,55 +104,11 @@ Acesse a documentação Swagger em: `http://localhost:8080/swagger-ui.html`
 
 <div align="center">
 
-|
- Desenvolvedor 
-|
- GitHub 
-|
-|
---------------
-|
---------
-|
-|
- André Junckes da Silva Mattos 
-|
-[
-![GitHub
-](
-https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
-)
-](https://github.com/) 
-|
-|
- Felipe Augusto Antunes Da Crus 
-|
-[
-![GitHub
-](
-https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
-)
-](https://github.com/) 
-|
-|
- Heloise Adriano Pereira 
-|
-[
-![GitHub
-](
-https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
-)
-](https://github.com/) 
-|
-|
- Marcos Grechi Anastacio 
-|
-[
-![GitHub
-](
-https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white
-)
-](https://github.com/) 
-|
+| Desenvolvedor                   | GitHub                                                                                                                                    |
+|---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| André Junckes da Silva Mattos   | [![GitHub ](https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white)](https://github.com/andrejsmattos)  |
+| Felipe Augusto Antunes Da Crus  | [![GitHub ](https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white)](https://github.com/AFelipeAntunes) |
+| Heloise Adriano Pereira         | [![GitHub ](https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white)](https://github.com/heloiseap)      |
+| Marcos Grechi Anastacio         | [![GitHub ](https://img.shields.io/badge/GitHub-100000?style=flat-square&logo=github&logoColor=white)](https://github.com/MarcosGrechi)   |
 
 </div>
