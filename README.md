@@ -3,10 +3,10 @@
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring-boot)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)](https://jwt.io/)
 [![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
 [![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
 [![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)](https://junit.org/junit5/)
-[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)](https://jwt.io/)
 
 ## 📋 Descrição do Projeto
 
@@ -21,7 +21,7 @@ Foi desenvolvida em Java e Spring Boot e gerenciada com Maven, visando resolver 
 
 ## 🛠️ Tecnologias Utilizadas
 
-<div align="center">
+<div align="left-align">
 
 | Tecnologia                                                                                                                     | Finalidade          |
 |--------------------------------------------------------------------------------------------------------------------------------|---------------------|
@@ -102,7 +102,7 @@ Acesse a documentação Swagger em: `http://localhost:8080/swagger-ui.html`
 
 ## 👥 Equipe de Desenvolvimento
 
-<div align="center">
+<div align="left-align">
 
 | Desenvolvedor                   | GitHub                                                                                                                                    |
 |---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
